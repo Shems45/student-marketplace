@@ -13,6 +13,16 @@ return new class extends Migration
     {
         Schema::create('listings', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('category_id')->constrained()->restrictOnDelete();
+
+            $table->string('title');
+            $table->text('description');
+            $table->unsignedInteger('price_cents')->nullable(); // prijs optioneel
+            $table->string('image_path')->nullable(); // opgeslagen op server
+            $table->boolean('is_sold')->default(false);
+
             $table->timestamps();
         });
     }

@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('faq_items', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('faq_category_id')->constrained()->cascadeOnDelete();
+            $table->string('question');
+            $table->text('answer');
             $table->timestamps();
         });
     }
