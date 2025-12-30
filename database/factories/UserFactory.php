@@ -25,10 +25,13 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
+            'username' => fake()->unique()->userName(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
+            'password' => 'Password!321', // hashed via casts 'password' => 'hashed'
             'remember_token' => Str::random(10),
+            'is_admin' => false,
+            'bio' => fake()->optional()->sentence(),
         ];
     }
 
