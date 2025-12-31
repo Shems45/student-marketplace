@@ -13,7 +13,16 @@
                 <a class="block p-6 border-b hover:bg-gray-50 transition" href="{{ route('conversations.show', $c) }}">
                     <div class="flex items-start justify-between">
                         <div class="flex-1">
-                            <div class="font-semibold text-lg mb-1">{{ $other->username }}</div>
+                            <div class="flex items-center gap-3 mb-1">
+                                <div class="font-semibold text-lg">{{ $other->username }}</div>
+                                @if(($c->unread_count ?? 0) > 0)
+                                    <span class="px-2 py-1 text-xs bg-red-500 text-white rounded-full font-semibold">{{ $c->unread_count }}</span>
+                                @elseif(($c->last_direction ?? null) === 'sent')
+                                    <span class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded">Sent</span>
+                                @elseif(($c->last_direction ?? null) === 'received')
+                                    <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded">Read</span>
+                                @endif
+                            </div>
                             <div class="text-sm text-gray-600">
                                 Listing: <span class="font-medium">{{ $c->listing->title }}</span>
                             </div>

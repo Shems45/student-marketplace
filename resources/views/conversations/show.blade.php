@@ -25,7 +25,7 @@
 
                     <div class="flex {{ $mine ? 'justify-end' : 'justify-start' }}">
                         <div class="max-w-[70%]">
-                            <div class="bg-{{ $mine ? 'blue-500 text-white' : 'gray-100' }} rounded-lg px-4 py-3 shadow">
+                            <div class="{{ $mine ? 'bg-blue-500 text-white' : 'bg-gray-100 text-black' }} rounded-lg px-4 py-3 shadow">
                                 <div class="text-xs {{ $mine ? 'text-blue-100' : 'text-gray-500' }} mb-1">
                                     {{ $mine ? 'You' : $m->sender->username }} • {{ $m->created_at->format('H:i') }}
                                 </div>

@@ -19,14 +19,16 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Default admin (REQUIREMENT)
-        $admin = User::factory()->create([
-            'name' => 'Admin',
-            'username' => 'admin',
-            'email' => 'admin@ehb.be',
-            'password' => 'Password!321',
-            'is_admin' => true,
-            'bio' => 'Platform administrator.',
-        ]);
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@ehb.be'],
+            [
+                'name' => 'Admin',
+                'username' => 'admin',
+                'password' => bcrypt('Password!321'),
+                'is_admin' => true,
+                'bio' => 'Platform administrator.',
+            ]
+        );
 
         // Regular users
         $users = User::factory()->count(10)->create();

@@ -13,11 +13,28 @@ class ConversationController extends Controller
         $userId = auth()->id();
 
         $conversations = Conversation::query()
-            ->with(['listing', 'buyer', 'seller'])
-            ->where('buyer_id', $userId)
-            ->orWhere('seller_id', $userId)
+            ->with(['listing', 'buyer', 'seller', 'messages' => function ($q) {
+                $q->latest();
+            }])
+            ->where(function ($q) use ($userId) {
+                $q->where('buyer_id', $userId)->orWhere('seller_id', $userId);
+            })
             ->latest('updated_at')
             ->get();
+
+        foreach ($conversations as $c) {
+            $lastRead = $c->lastReadAtFor($userId);
+
+            $c->unread_count = $c->messages
+                ->where('sender_id', '!=', $userId)
+                ->filter(fn($m) => $lastRead === null || $m->created_at->gt($lastRead))
+                ->count();
+
+            $c->last_message = $c->messages->first();
+            $c->last_direction = $c->last_message
+                ? ($c->last_message->sender_id === $userId ? 'sent' : 'received')
+                : null;
+        }
 
         return view('conversations.index', compact('conversations', 'userId'));
     }
@@ -44,6 +61,9 @@ class ConversationController extends Controller
     public function show(Conversation $conversation)
     {
         $this->authorize('view', $conversation);
+
+        $userId = auth()->id();
+        $conversation->markReadFor($userId);
 
         $conversation->load([
             'listing',

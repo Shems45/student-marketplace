@@ -20,7 +20,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Public
-Route::resource('listings', ListingController::class)->only(['index', 'show']);
+Route::get('/listings', [ListingController::class, 'index'])->name('listings.index');
+
 Route::resource('news', NewsController::class)->only(['index', 'show']);
 Route::get('/faq', [FaqController::class, 'index'])->name('faq.index');
 Route::get('/profiles/{user:username}', [ProfileController::class, 'show'])->name('profiles.show');
@@ -37,7 +38,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profiles.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profiles.update');
 
-    Route::resource('listings', ListingController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
+    // Listings CRUD - specific routes BEFORE dynamic routes
+    Route::get('/listings/create', [ListingController::class, 'create'])->name('listings.create');
+    Route::post('/listings', [ListingController::class, 'store'])->name('listings.store');
+    Route::get('/listings/{listing}/edit', [ListingController::class, 'edit'])->name('listings.edit');
+    Route::put('/listings/{listing}', [ListingController::class, 'update'])->name('listings.update');
+    Route::delete('/listings/{listing}', [ListingController::class, 'destroy'])->name('listings.destroy');
+    
+    // My Listings
+    Route::get('/my-listings', function () {
+        $listings = auth()->user()->listings()->latest()->get();
+        return view('listings.my', compact('listings'));
+    })->name('listings.mine');
 
     // Conversations
     Route::get('/conversations', [ConversationController::class, 'index'])->name('conversations.index');
@@ -45,6 +57,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/listings/{listing}/conversations', [ConversationController::class, 'start'])->name('conversations.start');
     Route::post('/conversations/{conversation}/messages', [MessageController::class, 'store'])->name('messages.store');
 });
+
+// Public listing show - AFTER /listings/create
+Route::get('/listings/{listing}', [ListingController::class, 'show'])->name('listings.show');
 
 // Admin-only
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
