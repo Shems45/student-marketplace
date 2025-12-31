@@ -48,6 +48,27 @@
                     </p>
                 </div>
 
+                @auth
+                    @if(auth()->id() !== $listing->user_id)
+                        <div class="border-t mt-4 pt-4">
+                            <form method="POST" action="{{ route('conversations.start', $listing) }}">
+                                @csrf
+                                <button class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold">
+                                    Message Seller
+                                </button>
+                            </form>
+                        </div>
+                    @endif
+                @endauth
+
+                @guest
+                    <div class="border-t mt-4 pt-4">
+                        <a class="block text-center px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300" href="{{ route('login') }}">
+                            Login to message seller
+                        </a>
+                    </div>
+                @endguest
+
                 @can('update', $listing)
                     <div class="border-t mt-6 pt-6 flex gap-3">
                         <a href="{{ route('listings.edit', $listing) }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">

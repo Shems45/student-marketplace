@@ -3,63 +3,37 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ContactMessage;
 use Illuminate\Http\Request;
 
 class ContactMessageAdminController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $q = $request->query('q');
+
+        $messages = ContactMessage::query()
+            ->when($q, fn ($query) => $query
+                ->where('name', 'like', "%{$q}%")
+                ->orWhere('email', 'like', "%{$q}%")
+                ->orWhere('subject', 'like', "%{$q}%")
+            )
+            ->latest()
+            ->paginate(20)
+            ->withQueryString();
+
+        return view('admin.contact_messages.index', compact('messages', 'q'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show(ContactMessage $contactMessage)
     {
-        //
+        return view('admin.contact_messages.show', compact('contactMessage'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function destroy(ContactMessage $contactMessage)
     {
-        //
-    }
+        $contactMessage->delete();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return redirect()->route('admin.contact-messages.index')->with('status', 'Message deleted.');
     }
 }

@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\ListingController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProfileController;
 
@@ -36,11 +38,18 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profiles.update');
 
     Route::resource('listings', ListingController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
+
+    // Conversations
+    Route::get('/conversations', [ConversationController::class, 'index'])->name('conversations.index');
+    Route::get('/conversations/{conversation}', [ConversationController::class, 'show'])->name('conversations.show');
+    Route::post('/listings/{listing}/conversations', [ConversationController::class, 'start'])->name('conversations.start');
+    Route::post('/conversations/{conversation}/messages', [MessageController::class, 'store'])->name('messages.store');
 });
 
 // Admin-only
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::resource('users', UserAdminController::class);
+    Route::post('/users/{user}/toggle-admin', [UserAdminController::class, 'toggleAdmin'])->name('users.toggle-admin');
     Route::resource('news', NewsAdminController::class)->except(['show']);
     Route::resource('faq-categories', FaqCategoryAdminController::class);
     Route::resource('faq-items', FaqItemAdminController::class);

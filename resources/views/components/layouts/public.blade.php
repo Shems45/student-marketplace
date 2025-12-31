@@ -18,6 +18,7 @@
                 <a href="{{ route('contact.create') }}">Contact</a>
 
                 @auth
+                    <a href="{{ route('conversations.index') }}">Messages</a>
                     <a href="{{ route('profiles.show', auth()->user()) }}">My profile</a>
                 @else
                     <a href="{{ route('login') }}">Log in</a>

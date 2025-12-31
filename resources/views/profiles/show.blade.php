@@ -1,52 +1,66 @@
-<x-layouts.public>
-    <h1 class="text-2xl font-semibold">{{ $user->username }}</h1>
+<x-layouts.public title="{{ $user->username }}'s Profile">
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        @auth
+            <div class="mb-6 flex gap-4">
+                @if(auth()->id() === $user->id)
+                    <a class="text-blue-600 hover:underline" href="{{ route('profiles.edit', $user) }}">Edit my profile</a>
+                @endif
 
-    <div class="text-sm text-gray-600 mb-4">
-        @if($user->birthday)
-            Birthday: {{ $user->birthday->format('Y-m-d') }}
-        @endif
-    </div>
+                <form method="POST" action="{{ route('logout') }}" class="inline">
+                    @csrf
+                    <button type="submit" class="text-red-600 hover:underline">Logout</button>
+                </form>
+            </div>
+        @endauth
 
-    <div class="flex gap-6 items-start">
-        <div class="w-48">
-            @if($user->profile_photo_path)
-                <img class="rounded border" src="{{ asset('storage/'.$user->profile_photo_path) }}" alt="Profile photo">
-            @else
-                <div class="rounded border bg-white p-6 text-center text-gray-600">No photo</div>
+        @guest
+            <div class="mb-6 flex gap-4">
+                <a class="text-blue-600 hover:underline" href="{{ route('login') }}">Login</a>
+                <a class="text-blue-600 hover:underline" href="{{ route('register') }}">Register</a>
+            </div>
+        @endguest
+
+        <h1 class="text-3xl font-bold mb-2">{{ $user->username }}</h1>
+
+        <div class="text-sm text-gray-600 mb-6">
+            @if($user->birthday)
+                Birthday: {{ $user->birthday->format('Y-m-d') }}
             @endif
         </div>
 
-        <div class="flex-1">
-            <div class="bg-white border rounded p-4">
-                <h2 class="font-semibold mb-2">About</h2>
-                <p class="whitespace-pre-line">{{ $user->bio ?? 'No bio yet.' }}</p>
-
-                @auth
-                    @if(auth()->id() === $user->id)
-                        <div class="mt-3">
-                            <a class="underline" href="{{ route('profiles.edit') }}">Edit my profile</a>
-                        </div>
-                    @endif
-                @endauth
+        <div class="flex gap-6 items-start">
+            <div class="w-48">
+                @if($user->profile_photo_path)
+                    <img class="rounded border shadow" src="{{ asset('storage/'.$user->profile_photo_path) }}" alt="Profile photo">
+                @else
+                    <div class="rounded border bg-white p-6 text-center text-gray-600">No photo</div>
+                @endif
             </div>
 
-            <div class="mt-6 bg-white border rounded p-4">
-                <h2 class="font-semibold mb-2">Latest listings</h2>
+            <div class="flex-1">
+                <div class="bg-white shadow rounded p-6">
+                    <h2 class="font-bold text-lg mb-2">About</h2>
+                    <p class="whitespace-pre-line text-gray-700">{{ $user->bio ?? 'No bio yet.' }}</p>
+                </div>
 
-                @if($user->listings->isEmpty())
-                    <div class="text-gray-600">No listings yet.</div>
-                @else
-                    <div class="space-y-2">
-                        @foreach($user->listings as $listing)
-                            <a class="block border rounded p-3 hover:bg-gray-50" href="{{ route('listings.show', $listing) }}">
-                                <div class="font-medium">{{ $listing->title }}</div>
-                                <div class="text-sm text-gray-600">
-                                    {{ $listing->created_at->format('Y-m-d') }}
-                                </div>
-                            </a>
-                        @endforeach
-                    </div>
-                @endif
+                <div class="mt-6 bg-white shadow rounded p-6">
+                    <h2 class="font-bold text-lg mb-4">Latest listings</h2>
+
+                    @if($user->listings->isEmpty())
+                        <div class="text-gray-500">No listings yet.</div>
+                    @else
+                        <div class="space-y-3">
+                            @foreach($user->listings as $listing)
+                                <a class="block border rounded p-3 hover:bg-gray-50 transition" href="{{ route('listings.show', $listing) }}">
+                                    <div class="font-semibold">{{ $listing->title }}</div>
+                                    <div class="text-sm text-gray-600">
+                                        {{ $listing->created_at->format('F j, Y') }}
+                                    </div>
+                                </a>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
             </div>
         </div>
     </div>
