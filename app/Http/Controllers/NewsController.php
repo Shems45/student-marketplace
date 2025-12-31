@@ -2,32 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\NewsItem;
 
 class NewsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $news = NewsItem::query()->latest('published_at')->paginate(10);
+        return view('news.index', compact('news'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show(NewsItem $news)
     {
-        //
+        return view('news.show', compact('news'));
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+}
     }
 
     /**

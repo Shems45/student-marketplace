@@ -41,7 +41,7 @@ Route::middleware('auth')->group(function () {
 // Admin-only
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::resource('users', UserAdminController::class);
-    Route::resource('news', NewsAdminController::class);
+    Route::resource('news', NewsAdminController::class)->except(['show']);
     Route::resource('faq-categories', FaqCategoryAdminController::class);
     Route::resource('faq-items', FaqItemAdminController::class);
     Route::resource('contact-messages', ContactMessageAdminController::class)->only(['index', 'show', 'destroy']);
