@@ -1,52 +1,281 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📚 Student Marketplace
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A modern, feature-rich marketplace platform designed specifically for students to buy, sell, and exchange study materials, textbooks, gadgets, and furniture. Built with Laravel 12 and inspired by 2dehands.be, this platform provides a trusted environment for student-to-student transactions.
 
-## About Laravel
+## ✨ Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Core Functionality
+- **Listings Management**: Create, edit, and manage product listings with images, categories, tags, and detailed descriptions
+- **Advanced Search**: Search listings by keyword, category, tags, location, and price range
+- **Location-Based**: Belgian city autocomplete with postal codes and distance calculations
+- **Status Management**: Mark items as sold, reserved, or featured
+- **Favorites System**: Save favorite listings for later viewing
+- **Real-time Messaging**: Built-in chat system between buyers and sellers
+- **User Profiles**: Public profiles with location, bio, and listing history
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Admin Features
+- **Comprehensive Dashboard**: Statistics overview with key metrics
+- **User Management**: Admin panel for managing users, listings, and content
+- **Content Moderation**: Review and manage contact messages, news items, and FAQs
+- **Role-Based Access**: Separate admin and user interfaces with proper authorization
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Additional Features
+- **News Section**: Keep users informed with announcements and updates
+- **FAQ System**: Categorized frequently asked questions
+- **Contact Form**: Direct communication channel with administrators
+- **Email Notifications**: Automatic email notifications for messages and contact replies
+- **Modern UI**: Clean, responsive design with Heroicons and Tailwind CSS
+- **Custom Branding**: Professional SVG favicon and consistent visual identity
 
-## Learning Laravel
+## 🛠 Tech Stack
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- **Framework**: Laravel 12.x
+- **PHP**: 8.4.16
+- **Database**: SQLite (easily switchable to MySQL/PostgreSQL)
+- **Frontend**: 
+  - Tailwind CSS 3.x
+  - Alpine.js
+  - Heroicons (Blade UI Kit)
+  - Vite
+- **Email**: Gmail SMTP integration
+- **Queue**: Sync driver (configurable to Redis/database)
+- **Authentication**: Laravel Breeze
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 📋 Requirements
 
-## Laravel Sponsors
+- PHP >= 8.2
+- Composer
+- Node.js >= 18.x and npm
+- SQLite (or MySQL/PostgreSQL)
+- Git
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🚀 Installation
 
-### Premium Partners
+### 1. Clone the Repository
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+git clone https://github.com/yourusername/student-marketplace.git
+cd student-marketplace
+```
 
-## Contributing
+### 2. Install Dependencies
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+# Install PHP dependencies
+composer install
 
-## Code of Conduct
+# Install JavaScript dependencies
+npm install
+```
+
+### 3. Environment Configuration
+
+```bash
+# Copy the environment file
+cp .env.example .env
+
+# Generate application key
+php artisan key:generate
+```
+
+### 4. Configure Environment Variables
+
+Edit `.env` and update the following:
+
+```env
+APP_NAME="Student Marketplace"
+APP_URL=http://localhost:8000
+
+# Database (SQLite is default, no additional config needed)
+DB_CONNECTION=sqlite
+
+# Mail Configuration (Gmail example)
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=your-email@gmail.com
+MAIL_PASSWORD=your-app-password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=your-email@gmail.com
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+### 5. Database Setup
+
+```bash
+# Create SQLite database file
+touch database/database.sqlite
+
+# Run migrations
+php artisan migrate
+
+# (Optional) Seed with sample data
+php artisan db:seed
+```
+
+### 6. Storage Setup
+
+```bash
+# Create storage link for public file access
+php artisan storage:link
+```
+
+### 7. Build Assets
+
+```bash
+# Development
+npm run dev
+
+# Production
+npm run build
+```
+
+### 8. Start the Application
+
+```bash
+# Using Laravel's built-in server
+php artisan serve
+
+# Or using Laravel Herd (recommended for local development)
+# Just navigate to the project folder in your browser
+```
+
+Visit `http://localhost:8000` in your browser.
+
+## 👥 Default Users
+
+After seeding, you can log in with:
+
+**Admin User:**
+- Email: admin@student-marketplace.test
+- Password: password
+
+**Regular User:**
+- Email: user@student-marketplace.test
+- Password: password
+
+## 📁 Project Structure
+
+```
+├── app/
+│   ├── Http/Controllers/      # Application controllers
+│   ├── Models/                # Eloquent models
+│   └── Providers/             # Service providers
+├── database/
+│   ├── migrations/            # Database migrations
+│   └── seeders/               # Database seeders
+├── resources/
+│   ├── views/                 # Blade templates
+│   ├── css/                   # Stylesheets
+│   └── js/                    # JavaScript files
+├── routes/
+│   ├── web.php               # Web routes
+│   └── auth.php              # Authentication routes
+└── public/
+    └── storage/              # Public file storage (symlink)
+```
+
+## 🎨 Key Models
+
+- **User**: Platform users with profiles and authentication
+- **Listing**: Product listings with images, prices, and locations
+- **Category**: Listing categories (Books, Electronics, Furniture, etc.)
+- **Tag**: Flexible tagging system for listings
+- **Conversation**: Chat conversations between users
+- **Message**: Individual messages in conversations
+- **NewsItem**: News and announcements
+- **FaqCategory** & **FaqItem**: FAQ system
+- **ContactMessage**: Contact form submissions
+
+## 🔧 Configuration
+
+### Email Setup
+
+For Gmail SMTP:
+1. Enable 2-factor authentication on your Google account
+2. Generate an App Password at https://myaccount.google.com/apppasswords
+3. Use the App Password in `MAIL_PASSWORD` in `.env`
+
+### Queue Configuration
+
+For production, configure a queue driver (Redis recommended):
+
+```env
+QUEUE_CONNECTION=redis
+```
+
+Then run the queue worker:
+
+```bash
+php artisan queue:work
+```
+
+### File Storage
+
+Images are stored in `storage/app/public` and symlinked to `public/storage`. Ensure proper permissions:
+
+```bash
+chmod -R 775 storage bootstrap/cache
+```
+
+## 🌐 Usage
+
+### Creating a Listing
+1. Register/Login to your account
+2. Click "Create Listing" in the header
+3. Fill in title, description, price, category, and location
+4. Upload an image (optional)
+5. Add tags for better discoverability
+6. Submit to publish
+
+### Managing Listings
+- **Edit**: Update listing details anytime
+- **Delete**: Remove listings you no longer need
+- **Mark as Sold**: Indicate when an item is sold
+- **Mark as Reserved**: Show when an item is reserved for someone
+- **Feature**: Admins can feature listings on the homepage
+
+### Messaging
+- Click "Contact Seller" on any listing
+- Start a conversation directly with the seller
+- Receive notifications for new messages
+- View all conversations in your inbox
+
+### Admin Panel
+Access the admin panel at `/admin` (requires admin privileges):
+- View comprehensive statistics
+- Manage all users and listings
+- Moderate contact messages
+- Manage news and FAQs
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## 🙏 Acknowledgments
+
+- Built with [Laravel](https://laravel.com)
+- UI components from [Tailwind CSS](https://tailwindcss.com)
+- Icons by [Heroicons](https://heroicons.com)
+- Inspired by [2dehands.be](https://www.2dehands.be)
+
+## 📧 Support
+
+For support, email support@student-marketplace.test or create an issue in the repository.
+
+---
+
+Made with ❤️ for students, by students
 
 In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
