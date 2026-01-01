@@ -310,7 +310,7 @@ All adapted code was understood, modified for this project, and properly tested.
 
 ## Notes
 
-This project was built for the Web Development 2 course at Erasmushogeschool Brussel. The marketplace concept is inspired by 2dehands.be but tailored specifically for student needs (textbooks, electronics, furniture, etc.).
+This project was built for the Web Development 2 course at Erasmushogeschool Brussel. Tailored specifically for student needs (textbooks, electronics, furniture, etc.).
 
 The project uses SQLite by default for ease of setup, but can be easily switched to MySQL or PostgreSQL by changing the database configuration in `.env`.
 
