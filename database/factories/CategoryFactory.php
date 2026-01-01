@@ -12,9 +12,8 @@ class CategoryFactory extends Factory
             'Books', 'Electronics', 'Furniture', 'Clothing', 'Sports', 'Misc',
         ];
 
-        // random maar toch uniek-ish
         return [
-            'name' => $this->faker->unique()->randomElement($names) . ' ' . $this->faker->unique()->numberBetween(1, 99),
+            'name' => $this->faker->unique()->randomElement($names),
         ];
     }
 }

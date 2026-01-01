@@ -17,7 +17,7 @@
                             <div class="flex-1">
                                 <h3 class="text-xl font-semibold mb-2">{{ $l->title }}</h3>
                                 <p class="text-gray-600 mb-3">{{ Str::limit($l->description, 150) }}</p>
-                                
+
                                 <div class="flex items-center gap-4 text-sm text-gray-500">
                                     <span class="font-semibold text-blue-600">€{{ number_format($l->price, 2) }}</span>
                                     <span>{{ $l->category->name }}</span>
@@ -26,19 +26,19 @@
                             </div>
 
                             @if($l->image_path)
-                                <img src="{{ asset('storage/' . $l->image_path) }}" 
-                                     alt="{{ $l->title }}" 
-                                     class="w-24 h-24 object-cover rounded ml-4">
+                                <img src="{{ asset('storage/' . $l->image_path) }}"
+                                     alt="{{ $l->title }}"
+                                     class="w-24 h-24 object-cover rounded-lg border border-gray-100 ml-4">
                             @endif
                         </div>
 
                         <div class="flex gap-4 mt-4 pt-4 border-t">
-                            <a href="{{ route('listings.show', $l) }}" 
+                            <a href="{{ route('listings.show', $l) }}"
                                class="text-blue-600 hover:underline font-medium">
                                 View
                             </a>
-                            
-                            <a href="{{ route('listings.edit', $l) }}" 
+
+                            <a href="{{ route('listings.edit', $l) }}"
                                class="text-blue-600 hover:underline font-medium">
                                 Edit
                             </a>

@@ -5,33 +5,143 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Listing;
 use App\Models\Tag;
+use App\Services\GeocodingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ListingController extends Controller
 {
+    public function __construct(private GeocodingService $geocoding)
+    {
+    }
+
     public function index(Request $request)
     {
         $q = $request->query('q');
         $categoryId = $request->query('category');
         $tagId = $request->query('tag');
+        $searchCity = trim((string) $request->query('city'));
+        $searchZip = trim((string) $request->query('postcode'));
+        $radiusInput = $request->query('radius');
+        $allowedRadii = [5, 10, 25, 50];
+        $radiusKm = in_array((int) $radiusInput, $allowedRadii, true) ? (int) $radiusInput : null;
 
-        $listings = Listing::query()
+        $listingsQuery = Listing::query()
             ->with(['category', 'user', 'tags'])
             ->when($q, fn ($query) => $query->where(function ($sub) use ($q) {
                 $sub->where('title', 'like', "%{$q}%")
                     ->orWhere('description', 'like', "%{$q}%");
             }))
             ->when($categoryId, fn ($query) => $query->where('category_id', $categoryId))
-            ->when($tagId, fn ($query) => $query->whereHas('tags', fn ($t) => $t->where('tags.id', $tagId)))
-            ->latest()
-            ->paginate(12)
-            ->withQueryString();
+            ->when($tagId, fn ($query) => $query->whereHas('tags', fn ($t) => $t->where('tags.id', $tagId)));
+
+        // Distance filtering: fetch all candidates and filter in PHP
+        if ($searchCity && $searchZip && $radiusKm) {
+            $coords = $this->geocoding->geocode($searchZip, $searchCity);
+
+            if ($coords) {
+                $searchLat = $coords['lat'];
+                $searchLng = $coords['lng'];
+
+                // Fetch all listings with coordinates
+                $allListings = $listingsQuery
+                    ->whereNotNull('lat')
+                    ->whereNotNull('lng')
+                    ->latest()
+                    ->get();
+
+                // Calculate distance for each and filter
+                $filteredListings = $allListings
+                    ->map(function (Listing $listing) use ($searchLat, $searchLng) {
+                        $listing->distance_km = $this->haversineDistance(
+                            $searchLat,
+                            $searchLng,
+                            $listing->lat,
+                            $listing->lng
+                        );
+                        return $listing;
+                    })
+                    ->filter(fn (Listing $l) => $l->distance_km <= ($this->getRadiusFromRequest() ?? 50))
+                    ->sortBy('distance_km')
+                    ->values();
+
+                // Manual pagination with LengthAwarePaginator
+                $page = request('page', 1);
+                $perPage = 12;
+                $total = $filteredListings->count();
+                $items = $filteredListings
+                    ->slice(($page - 1) * $perPage, $perPage)
+                    ->values();
+
+                // Return LengthAwarePaginator (has total() method)
+                $listings = new \Illuminate\Pagination\LengthAwarePaginator(
+                    $items,
+                    $total,
+                    $perPage,
+                    $page,
+                    [
+                        'path' => route('listings.index'),
+                        'query' => request()->query(),
+                    ]
+                );
+            } else {
+                session()->flash('warning', 'Could not geocode that search location. Showing results without distance sorting.');
+                $listings = $listingsQuery
+                    ->latest()
+                    ->paginate(12)
+                    ->withQueryString();
+            }
+        } else {
+            // No distance filtering: standard query
+            $listings = $listingsQuery
+                ->latest()
+                ->paginate(12)
+                ->withQueryString();
+        }
 
         $categories = Category::query()->orderBy('name')->get();
         $tags = Tag::query()->orderBy('name')->get();
 
-        return view('listings.index', compact('listings', 'categories', 'tags', 'q', 'categoryId', 'tagId'));
+        return view('listings.index', compact(
+            'listings',
+            'categories',
+            'tags',
+            'q',
+            'categoryId',
+            'tagId',
+            'searchCity',
+            'searchZip',
+            'radiusKm'
+        ));
+    }
+
+    /**
+     * Haversine formula to calculate distance between two coordinates in km.
+     */
+    private function haversineDistance(float $lat1, float $lon1, float $lat2, float $lon2): float
+    {
+        $earthRadius = 6371; // km
+        $lat1Rad = deg2rad($lat1);
+        $lat2Rad = deg2rad($lat2);
+        $deltaLat = deg2rad($lat2 - $lat1);
+        $deltaLon = deg2rad($lon2 - $lon1);
+
+        $a = sin($deltaLat / 2) ** 2 +
+             cos($lat1Rad) * cos($lat2Rad) * sin($deltaLon / 2) ** 2;
+
+        $c = 2 * asin(sqrt($a));
+
+        return $earthRadius * $c;
+    }
+
+    /**
+     * Helper to get radius from request.
+     */
+    private function getRadiusFromRequest(): ?int
+    {
+        $radius = request('radius');
+        $allowed = [5, 10, 25, 50];
+        return in_array((int) $radius, $allowed, true) ? (int) $radius : null;
     }
 
     public function show(Listing $listing)
@@ -56,6 +166,8 @@ class ListingController extends Controller
             'description' => ['required', 'string'],
             'price_eur' => ['nullable', 'numeric', 'min:0', 'max:99999'],
             'image' => ['nullable', 'image', 'max:2048'],
+            'location_city' => ['required', 'string', 'max:80'],
+            'location_zip' => ['required', 'string', 'max:12'],
             'tag_ids' => ['nullable', 'array'],
             'tag_ids.*' => ['integer', 'exists:tags,id'],
         ]);
@@ -70,6 +182,12 @@ class ListingController extends Controller
             $priceCents = (int) round(((float) $data['price_eur']) * 100);
         }
 
+        $coords = $this->geocoding->geocode($data['location_zip'], $data['location_city']);
+
+        if (! $coords) {
+            session()->flash('warning', 'Listing saved, but we could not place it on the map for that city/postcode.');
+        }
+
         $listing = Listing::create([
             'user_id' => auth()->id(),
             'category_id' => $data['category_id'],
@@ -78,6 +196,10 @@ class ListingController extends Controller
             'price_cents' => $priceCents,
             'image_path' => $imagePath,
             'is_sold' => false,
+            'location_city' => $data['location_city'] ?? null,
+            'location_zip' => $data['location_zip'] ?? null,
+            'lat' => $coords['lat'] ?? null,
+            'lng' => $coords['lng'] ?? null,
         ]);
 
         $listing->tags()->sync($data['tag_ids'] ?? []);
@@ -108,6 +230,8 @@ class ListingController extends Controller
             'image' => ['nullable', 'image', 'max:2048'],
             'remove_image' => ['nullable', 'boolean'],
             'is_sold' => ['nullable', 'boolean'],
+            'location_city' => ['required', 'string', 'max:80'],
+            'location_zip' => ['required', 'string', 'max:12'],
             'tag_ids' => ['nullable', 'array'],
             'tag_ids.*' => ['integer', 'exists:tags,id'],
         ]);
@@ -129,13 +253,34 @@ class ListingController extends Controller
             $priceCents = (int) round(((float) $data['price_eur']) * 100);
         }
 
+        $coords = null;
+        $locationChanged = $listing->location_city !== $data['location_city'] || $listing->location_zip !== $data['location_zip'];
+
+        if ($locationChanged) {
+            $coords = $this->geocoding->geocode($data['location_zip'], $data['location_city']);
+
+            if (! $coords) {
+                session()->flash('warning', 'Updated, but we could not map that new location.');
+                $listing->lat = null;
+                $listing->lng = null;
+            }
+        }
+
         $listing->fill([
             'category_id' => $data['category_id'],
             'title' => $data['title'],
             'description' => $data['description'],
             'price_cents' => $priceCents,
             'is_sold' => $request->boolean('is_sold'),
+            'location_city' => $data['location_city'] ?? null,
+            'location_zip' => $data['location_zip'] ?? null,
         ])->save();
+
+        if ($coords) {
+            $listing->lat = $coords['lat'];
+            $listing->lng = $coords['lng'];
+            $listing->save();
+        }
 
         $listing->tags()->sync($data['tag_ids'] ?? []);
 

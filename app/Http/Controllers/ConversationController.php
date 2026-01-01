@@ -36,6 +36,19 @@ class ConversationController extends Controller
                 : null;
         }
 
+        $conversations = $conversations
+            ->sort(function ($a, $b) {
+                $aUnread = $a->unread_count > 0;
+                $bUnread = $b->unread_count > 0;
+
+                if ($aUnread !== $bUnread) {
+                    return $aUnread ? -1 : 1;
+                }
+
+                return $b->updated_at <=> $a->updated_at;
+            })
+            ->values();
+
         return view('conversations.index', compact('conversations', 'userId'));
     }
 

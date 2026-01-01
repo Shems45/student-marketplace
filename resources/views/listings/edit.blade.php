@@ -1,95 +1,112 @@
 <x-layouts.public title="Edit Listing">
-    <div class="max-w-2xl mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold mb-6">Edit Listing</h1>
+    <div class="max-w-3xl mx-auto">
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-gray-900">Edit listing</h1>
+            <p class="text-gray-600 mt-2">Update details and keep buyers informed</p>
+        </div>
 
-        <x-flash-message />
-
-        <form method="POST" action="{{ route('listings.update', $listing) }}" enctype="multipart/form-data" class="bg-white shadow rounded p-6">
+        <form method="POST" action="{{ route('listings.update', $listing) }}" enctype="multipart/form-data" class="bg-white border border-gray-100 rounded-xl shadow-sm p-6 space-y-6">
             @csrf
             @method('PUT')
 
-            <div class="mb-4">
-                <label for="category_id" class="block text-sm font-medium mb-1">Category <span class="text-red-500">*</span></label>
-                <select name="category_id" id="category_id" required class="w-full border-gray-300 rounded shadow-sm">
-                    <option value="">-- Select Category --</option>
-                    @foreach($categories as $cat)
-                        <option value="{{ $cat->id }}" @selected(old('category_id', $listing->category_id) == $cat->id)>{{ $cat->name }}</option>
-                    @endforeach
-                </select>
-                @error('category_id')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <label for="category_id" class="text-sm font-semibold text-gray-900">Category <span class="text-red-500">*</span></label>
+                    <select name="category_id" id="category_id" required class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-gray-900 focus:ring-1 focus:ring-gray-900">
+                        <option value="">Select a category</option>
+                        @foreach($categories as $cat)
+                            <option value="{{ $cat->id }}" @selected(old('category_id', $listing->category_id) == $cat->id)>{{ $cat->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('category_id')
+                        <p class="text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="space-y-2">
+                    <label for="price_eur" class="text-sm font-semibold text-gray-900">Price (EUR)</label>
+                    <input type="number" name="price_eur" id="price_eur" value="{{ old('price_eur', $listing->price_cents ? $listing->price_cents / 100 : null) }}" step="0.01" min="0" max="99999" placeholder="Leave empty for 'on request'" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-gray-900 focus:ring-1 focus:ring-gray-900">
+                    @error('price_eur')
+                        <p class="text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
             </div>
 
-            <div class="mb-4">
-                <label for="title" class="block text-sm font-medium mb-1">Title <span class="text-red-500">*</span></label>
-                <input type="text" name="title" id="title" value="{{ old('title', $listing->title) }}" required class="w-full border-gray-300 rounded shadow-sm">
+            <div class="space-y-2">
+                <label for="title" class="text-sm font-semibold text-gray-900">Title <span class="text-red-500">*</span></label>
+                <input type="text" name="title" id="title" value="{{ old('title', $listing->title) }}" required class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-gray-900 focus:ring-1 focus:ring-gray-900">
                 @error('title')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
 
-            <div class="mb-4">
-                <label for="description" class="block text-sm font-medium mb-1">Description <span class="text-red-500">*</span></label>
-                <textarea name="description" id="description" rows="5" required class="w-full border-gray-300 rounded shadow-sm">{{ old('description', $listing->description) }}</textarea>
+            <div class="space-y-2">
+                <label for="description" class="text-sm font-semibold text-gray-900">Description <span class="text-red-500">*</span></label>
+                <textarea name="description" id="description" rows="5" required class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-gray-900 focus:ring-1 focus:ring-gray-900">{{ old('description', $listing->description) }}</textarea>
                 @error('description')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="mb-4">
-                <label for="price_eur" class="block text-sm font-medium mb-1">Price (EUR)</label>
-                <input type="number" name="price_eur" id="price_eur" value="{{ old('price_eur', $listing->price_cents ? $listing->price_cents / 100 : null) }}" step="0.01" min="0" max="99999" placeholder="Leave empty for 'Price on request'" class="w-full border-gray-300 rounded shadow-sm">
-                @error('price_eur')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
 
             @if($listing->image_path)
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-1">Current Image</label>
-                    <img src="{{ asset('storage/' . $listing->image_path) }}" alt="{{ $listing->title }}" class="w-48 h-48 object-cover rounded mb-2">
-                    <label class="flex items-center gap-2">
+                <div class="space-y-3">
+                    <label class="text-sm font-semibold text-gray-900">Current image</label>
+                    <img src="{{ asset('storage/' . $listing->image_path) }}" alt="{{ $listing->title }}" class="w-48 h-48 object-cover rounded-lg border border-gray-100">
+                    <label class="flex items-center gap-2 text-sm text-red-600">
                         <input type="checkbox" name="remove_image" value="1" class="rounded border-gray-300">
-                        <span class="text-sm text-red-600">Remove current image</span>
+                        <span>Remove current image</span>
                     </label>
                 </div>
             @endif
 
-            <div class="mb-4">
-                <label for="image" class="block text-sm font-medium mb-1">{{ $listing->image_path ? 'Replace Image' : 'Image' }} (max 2MB)</label>
-                <input type="file" name="image" id="image" accept="image/*" class="w-full border-gray-300 rounded shadow-sm">
+            <div class="space-y-2">
+                <label for="image" class="text-sm font-semibold text-gray-900">{{ $listing->image_path ? 'Replace image' : 'Image' }} (max 2MB)</label>
+                <input type="file" name="image" id="image" accept="image/*" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-gray-900 focus:ring-1 focus:ring-gray-900">
                 @error('image')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
 
-            <div class="mb-4">
-                <label for="tag_ids" class="block text-sm font-medium mb-1">Tags (Hold Ctrl to select multiple)</label>
-                <select name="tag_ids[]" id="tag_ids" multiple size="6" class="w-full border-gray-300 rounded shadow-sm">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <label for="location_city" class="text-sm font-semibold text-gray-900">City <span class="text-red-500">*</span></label>
+                    <input type="text" name="location_city" id="location_city" value="{{ old('location_city', $listing->location_city ?? '') }}" placeholder="e.g. Brussels" required maxlength="80" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-gray-900 focus:ring-1 focus:ring-gray-900">
+                    @error('location_city')
+                        <p class="text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="space-y-2">
+                    <label for="location_zip" class="text-sm font-semibold text-gray-900">Postcode <span class="text-red-500">*</span></label>
+                    <input type="text" name="location_zip" id="location_zip" value="{{ old('location_zip', $listing->location_zip ?? '') }}" placeholder="e.g. 1000" required maxlength="12" inputmode="numeric" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-gray-900 focus:ring-1 focus:ring-gray-900">
+                    @error('location_zip')
+                        <p class="text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label for="tag_ids" class="text-sm font-semibold text-gray-900">Tags (multi-select)</label>
+                <select name="tag_ids[]" id="tag_ids" multiple size="6" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-gray-900 focus:ring-1 focus:ring-gray-900">
                     @foreach($tags as $tag)
                         <option value="{{ $tag->id }}" @selected(in_array($tag->id, old('tag_ids', $listing->tags->pluck('id')->toArray())))>{{ $tag->name }}</option>
                     @endforeach
                 </select>
                 @error('tag_ids')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
 
-            <div class="mb-6">
+            <div class="space-y-2">
                 <label class="flex items-center gap-2">
                     <input type="checkbox" name="is_sold" value="1" @checked(old('is_sold', $listing->is_sold)) class="rounded border-gray-300">
-                    <span class="text-sm font-medium">Mark as SOLD</span>
+                    <span class="text-sm font-semibold text-gray-900">Mark as SOLD</span>
                 </label>
             </div>
 
-            <div class="flex gap-3">
-                <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
-                    Update Listing
-                </button>
-                <a href="{{ route('listings.show', $listing) }}" class="bg-gray-300 text-gray-800 px-6 py-2 rounded hover:bg-gray-400">
-                    Cancel
-                </a>
+            <div class="flex flex-wrap gap-3">
+                <button type="submit" class="px-5 py-2.5 bg-gray-900 text-white text-sm font-semibold rounded-lg hover:bg-gray-800 transition">Update listing</button>
+                <a href="{{ route('listings.show', $listing) }}" class="px-5 py-2.5 bg-white text-gray-800 text-sm font-semibold rounded-lg border border-gray-200 hover:bg-gray-50 transition">Cancel</a>
             </div>
         </form>
     </div>

@@ -14,7 +14,7 @@ class TagFactory extends Factory
         ];
 
         return [
-            'name' => $this->faker->unique()->randomElement($base) . '-' . $this->faker->unique()->numberBetween(1, 999),
+            'name' => $this->faker->unique()->randomElement($base),
         ];
     }
 }

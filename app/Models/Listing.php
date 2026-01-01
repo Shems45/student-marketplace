@@ -17,6 +17,10 @@ class Listing extends Model
         'price_cents',
         'image_path',
         'is_sold',
+        'location_city',
+        'location_zip',
+        'lat',
+        'lng',
     ];
 
     protected function casts(): array
@@ -24,6 +28,8 @@ class Listing extends Model
         return [
             'is_sold' => 'boolean',
             'price_cents' => 'integer',
+            'lat' => 'float',
+            'lng' => 'float',
         ];
     }
 

@@ -44,7 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/listings/{listing}/edit', [ListingController::class, 'edit'])->name('listings.edit');
     Route::put('/listings/{listing}', [ListingController::class, 'update'])->name('listings.update');
     Route::delete('/listings/{listing}', [ListingController::class, 'destroy'])->name('listings.destroy');
-    
+
     // My Listings
     Route::get('/my-listings', function () {
         $listings = auth()->user()->listings()->latest()->get();

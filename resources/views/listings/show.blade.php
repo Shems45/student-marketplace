@@ -1,94 +1,170 @@
-<x-layouts.public title="{{ $listing->title }}">
-    <div class="max-w-4xl mx-auto px-4 py-8">
-        <x-flash-message />
+<x-layouts.public :title="$listing->title">
+    <div>
+        <!-- Breadcrumb -->
+        <div class="mb-8">
+            <a href="{{ route('listings.index') }}" class="text-sm text-gray-600 hover:text-gray-900">← Back to listings</a>
+        </div>
 
-        <div class="bg-white shadow rounded overflow-hidden">
-            @if($listing->image_path)
-                <img src="{{ asset('storage/' . $listing->image_path) }}" alt="{{ $listing->title }}" class="w-full max-h-96 object-cover">
-            @else
-                <div class="w-full h-64 bg-gray-200 flex items-center justify-center text-gray-400">No Image</div>
-            @endif
-
-            <div class="p-6">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <h1 class="text-3xl font-bold mb-2">{{ $listing->title }}</h1>
-                        <p class="text-gray-600">{{ $listing->category->name }}</p>
-                    </div>
-
-                    @if($listing->price_cents)
-                        <p class="text-2xl font-bold text-blue-600">€{{ number_format($listing->price_cents / 100, 2) }}</p>
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left: Image & Details -->
+            <div class="lg:col-span-2">
+                <!-- Image -->
+                <div class="mb-8 bg-gray-100 rounded-xl overflow-hidden">
+                    @if($listing->image_path)
+                        <img
+                            src="{{ asset('storage/' . $listing->image_path) }}"
+                            alt="{{ $listing->title }}"
+                            class="w-full h-64 md:h-80 object-cover"
+                        />
                     @else
-                        <p class="text-xl text-gray-500">Price on request</p>
+                        <div class="w-full h-64 md:h-80 flex items-center justify-center text-gray-400 text-6xl">
+                            📦
+                        </div>
                     @endif
                 </div>
 
+                <!-- Title & Basic Info -->
+                <div class="mb-8">
+                    <div class="mb-4">
+                        <span class="inline-block px-3 py-1 text-xs font-semibold bg-gray-100 text-gray-700 rounded-full">{{ $listing->category->name }}</span>
+                    </div>
+                    <h1 class="text-4xl font-bold text-gray-900 mb-2">{{ $listing->title }}</h1>
+                    <p class="text-gray-600">Posted by <a href="{{ route('profiles.show', $listing->user) }}" class="font-semibold text-gray-900 hover:underline">{{ $listing->user->username }}</a> • {{ $listing->created_at->diffForHumans() }}</p>
+
+                    @if($listing->location_city || $listing->location_zip)
+                        <p class="text-sm text-gray-600 mt-1">
+                            📍 {{ trim(($listing->location_zip ?? '') . ' ' . ($listing->location_city ?? '')) }}
+                        </p>
+                    @endif
+                </div>
+
+                <!-- Status Alert -->
                 @if($listing->is_sold)
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
-                        This listing has been marked as SOLD.
+                    <div class="mb-8 p-4 bg-red-50 border border-red-200 rounded-lg">
+                        <p class="text-sm font-semibold text-red-800">✕ This item has been sold</p>
                     </div>
                 @endif
 
+                <!-- Tags -->
                 @if($listing->tags->isNotEmpty())
-                    <div class="flex flex-wrap gap-2 mb-4">
+                    <div class="mb-8 flex flex-wrap gap-2">
                         @foreach($listing->tags as $tag)
-                            <span class="bg-gray-200 text-gray-700 text-sm px-3 py-1 rounded">{{ $tag->name }}</span>
+                            <span class="inline-block px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">{{ $tag->name }}</span>
                         @endforeach
                     </div>
                 @endif
 
-                <div class="prose max-w-none mb-6">
-                    <p class="whitespace-pre-line">{{ $listing->description }}</p>
+                <!-- Description -->
+                <div class="prose prose-sm max-w-none mb-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">Description</h3>
+                    <p class="text-gray-600 whitespace-pre-line leading-relaxed">{{ $listing->description }}</p>
                 </div>
 
-                <div class="border-t pt-4">
-                    <p class="text-sm text-gray-600">
-                        Posted by <a href="{{ route('profiles.show', $listing->user) }}" class="text-blue-600 hover:underline">{{ $listing->user->username }}</a>
-                        on {{ $listing->created_at->format('F j, Y') }}
-                    </p>
-                </div>
+                <!-- Owner Actions -->
+                @can('update', $listing)
+                    <div class="border-t border-gray-200 pt-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Manage Listing</h3>
+                        <div class="flex gap-3">
+                            <a
+                                href="{{ route('listings.edit', $listing) }}"
+                                class="px-6 py-3 bg-gray-900 text-white text-sm font-semibold rounded-lg hover:bg-gray-800 transition"
+                            >
+                                Edit
+                            </a>
 
-                @auth
-                    @if(auth()->id() !== $listing->user_id)
-                        <div class="border-t mt-4 pt-4">
-                            <form method="POST" action="{{ route('conversations.start', $listing) }}">
+                            <form method="POST" action="{{ route('listings.destroy', $listing) }}" onsubmit="return confirm('Delete this listing permanently?');" class="inline">
                                 @csrf
-                                <button class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold">
-                                    Message Seller
+                                @method('DELETE')
+                                <button
+                                    type="submit"
+                                    class="px-6 py-3 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-700 transition"
+                                >
+                                    Delete
                                 </button>
                             </form>
                         </div>
-                    @endif
-                @endauth
-
-                @guest
-                    <div class="border-t mt-4 pt-4">
-                        <a class="block text-center px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300" href="{{ route('login') }}">
-                            Login to message seller
-                        </a>
-                    </div>
-                @endguest
-
-                @can('update', $listing)
-                    <div class="border-t mt-6 pt-6 flex gap-3">
-                        <a href="{{ route('listings.edit', $listing) }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                            Edit Listing
-                        </a>
-
-                        <form method="POST" action="{{ route('listings.destroy', $listing) }}" onsubmit="return confirm('Are you sure you want to delete this listing?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
-                                Delete
-                            </button>
-                        </form>
                     </div>
                 @endcan
             </div>
-        </div>
 
-        <div class="mt-4">
-            <a href="{{ route('listings.index') }}" class="text-blue-600 hover:underline">&larr; Back to Listings</a>
+            <!-- Right: Sidebar -->
+            <div class="lg:col-span-1">
+                <!-- Price Card -->
+                <div class="bg-white border border-gray-200 rounded-xl p-6 mb-6 sticky top-20 shadow-sm">
+                    <div class="mb-6">
+                        @if($listing->price_cents)
+                            <p class="text-4xl font-bold text-sky-700">€{{ number_format($listing->price_cents / 100, 2) }}</p>
+                            <p class="text-sm text-gray-600 mt-1">Listed price</p>
+                        @else
+                            <p class="text-2xl font-semibold text-gray-900">Price on request</p>
+                            <p class="text-sm text-gray-600 mt-1">Contact seller for details</p>
+                        @endif
+                    </div>
+
+                    @if($listing->location_city || $listing->location_zip)
+                        <div class="mb-6 flex items-start gap-2 text-sm text-gray-700">
+                            <span class="mt-[2px]">📍</span>
+                            <div>
+                                <p class="font-semibold">{{ trim(($listing->location_zip ?? '') . ' ' . ($listing->location_city ?? '')) }}</p>
+                                <p class="text-gray-500">Belgium</p>
+                            </div>
+                        </div>
+                    @endif
+
+                    <!-- Message/Login Action -->
+                    @auth
+                        @if(auth()->id() !== $listing->user_id)
+                            <form method="POST" action="{{ route('conversations.start', $listing) }}" class="mb-3">
+                                @csrf
+                                <button
+                                    type="submit"
+                                    class="w-full px-6 py-3 bg-sky-600 text-white text-sm font-semibold rounded-lg hover:bg-sky-700 transition shadow-sm"
+                                >
+                                    Message Seller
+                                </button>
+                            </form>
+                        @endif
+                    @else
+                        <a
+                            href="{{ route('login') }}"
+                            class="block w-full px-6 py-3 bg-sky-600 text-white text-sm font-semibold rounded-lg hover:bg-sky-700 transition text-center shadow-sm"
+                        >
+                            Sign in to Message
+                        </a>
+                    @endauth
+
+                    <!-- Info List -->
+                    <div class="border-t border-gray-100 pt-6 space-y-4">
+                        <div>
+                            <p class="text-xs text-gray-600 font-semibold uppercase">Condition</p>
+                            <p class="text-sm text-gray-900 font-medium mt-1">Used</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-600 font-semibold uppercase">Posted</p>
+                            <p class="text-sm text-gray-900 font-medium mt-1">{{ $listing->created_at->diffForHumans() }}</p>
+                        </div>
+                        @if($listing->is_sold)
+                            <div>
+                                <p class="text-xs text-gray-600 font-semibold uppercase">Status</p>
+                                <p class="text-sm text-red-600 font-semibold mt-1">Sold</p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Seller Info Card -->
+                <div class="bg-white border border-gray-100 rounded-xl p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Seller</h3>
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-lg">👤</div>
+                        <div class="flex-1">
+                            <a href="{{ route('profiles.show', $listing->user) }}" class="font-semibold text-gray-900 hover:underline">{{ $listing->user->username }}</a>
+                            <p class="text-sm text-gray-600 mt-1">{{ $listing->user->bio ?: 'No bio' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </x-layouts.public>
