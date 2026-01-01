@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/listings/{listing}', [ListingController::class, 'update'])->name('listings.update');
     Route::delete('/listings/{listing}', [ListingController::class, 'destroy'])->name('listings.destroy');
     Route::patch('/listings/{listing}/toggle-sold', [ListingController::class, 'toggleSold'])->name('listings.toggleSold');
+    Route::patch('/listings/{listing}/toggle-reserved', [ListingController::class, 'toggleReserved'])->name('listings.toggleReserved');
 
     // Favorites
     Route::post('/listings/{listing}/favorite', [FavoriteController::class, 'store'])->name('favorites.store');
@@ -83,6 +84,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/listings', [ListingAdminController::class, 'index'])->name('listings.index');
     Route::patch('/listings/{listing}/toggle-featured', [ListingAdminController::class, 'toggleFeatured'])->name('listings.toggleFeatured');
     Route::patch('/listings/{listing}/toggle-sold', [ListingAdminController::class, 'toggleSold'])->name('listings.toggleSold');
+    Route::patch('/listings/{listing}/toggle-reserved', [ListingAdminController::class, 'toggleReserved'])->name('listings.toggleReserved');
     Route::delete('/listings/{listing}', [ListingAdminController::class, 'destroy'])->name('listings.destroy');
 });
 

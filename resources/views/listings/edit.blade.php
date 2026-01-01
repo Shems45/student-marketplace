@@ -86,12 +86,21 @@
             </div>
 
             <div class="space-y-2">
-                <label for="tag_ids" class="text-sm font-semibold text-gray-900">Tags (multi-select)</label>
-                <select name="tag_ids[]" id="tag_ids" multiple size="6" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-gray-900 focus:ring-1 focus:ring-gray-900">
+                <label class="text-sm font-semibold text-gray-900">Tags</label>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     @foreach($tags as $tag)
-                        <option value="{{ $tag->id }}" @selected(in_array($tag->id, old('tag_ids', $listing->tags->pluck('id')->toArray())))>{{ $tag->name }}</option>
+                        <label class="flex items-center gap-2 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                            <input
+                                type="checkbox"
+                                name="tag_ids[]"
+                                value="{{ $tag->id }}"
+                                @checked(in_array($tag->id, old('tag_ids', $listing->tags->pluck('id')->toArray())))
+                                class="rounded border-gray-300 text-gray-900 focus:ring-gray-900"
+                            >
+                            <span class="text-sm text-gray-700">{{ $tag->name }}</span>
+                        </label>
                     @endforeach
-                </select>
+                </div>
                 @error('tag_ids')
                     <p class="text-sm text-red-600">{{ $message }}</p>
                 @enderror

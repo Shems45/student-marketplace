@@ -35,10 +35,6 @@
                             <span class="text-indigo-600">●</span>
                             <span><strong>{{ number_format($userCount) }}</strong> studenten</span>
                         </div>
-                        <div class="flex items-center gap-2 px-3 py-2 bg-white/70 border border-gray-100 rounded-lg shadow-sm">
-                            <span class="text-emerald-600">●</span>
-                            <span>Betrouwbare chat & badges</span>
-                        </div>
                     </div>
 
                     <div class="flex flex-wrap gap-3">
@@ -62,15 +58,15 @@
                         </div>
                         <ol class="space-y-3 text-sm text-gray-700">
                             <li class="flex gap-3"><span class="h-6 w-6 flex items-center justify-center rounded-full bg-sky-100 text-sky-700 font-semibold">1</span>Foto en titel toevoegen</li>
-                            <li class="flex gap-3"><span class="h-6 w-6 flex items-center justify-center rounded-full bg-sky-100 text-sky-700 font-semibold">2</span>Prijs of "op aanvraag" instellen</li>
-                            <li class="flex gap-3"><span class="h-6 w-6 flex items-center justify-center rounded-full bg-sky-100 text-sky-700 font-semibold">3</span>Direct chatten met kopers</li>
+                            <li class="flex gap-3"><span class="h-6 w-6 flex items-center justify-center rounded-full bg-sky-100 text-sky-700 font-semibold">2</span>Prijs instellen</li>
+                            <li class="flex gap-3"><span class="h-6 w-6 flex items-center justify-center rounded-full bg-sky-100 text-sky-700 font-semibold">3</span>Direct chatten met verkopers</li>
                         </ol>
                         <div class="mt-6">
                             <a href="{{ route('listings.create') }}" class="inline-flex items-center justify-center px-4 py-2.5 bg-sky-600 text-white text-sm font-semibold rounded-lg hover:bg-sky-700 transition shadow-sm w-full">Start nu</a>
                         </div>
                     </div>
                     <div class="bg-white/70 border border-dashed border-gray-200 rounded-xl p-4 text-sm text-gray-700">
-                        ✅ Veilige berichten, ✅ duidelijke sold-badge, ✅ snelle filters. Helemaal klaar voor een 2dehands-gevoel, maar gericht op studenten.
+                        Helemaal klaar voor een 2dehands-gevoel, maar gericht op studenten.
                     </div>
                 </div>
             </div>
@@ -81,7 +77,6 @@
             <section class="space-y-4">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm font-semibold text-amber-600 uppercase tracking-wide">⭐ Uitgelicht</p>
                         <h2 class="text-2xl font-bold text-gray-900">Featured listings</h2>
                     </div>
                     <a href="{{ route('listings.index') }}" class="text-sm font-semibold text-sky-700 hover:text-sky-800">Meer →</a>
@@ -89,8 +84,7 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     @foreach($featuredListings as $listing)
-                        <a href="{{ route('listings.show', $listing) }}" class="group relative bg-white border-2 border-amber-200 rounded-xl overflow-hidden hover:border-amber-300 hover:shadow-lg transition">
-                            <div class="absolute top-3 left-3 z-10 px-3 py-1 text-xs font-bold bg-amber-400 text-amber-900 rounded-full shadow-sm">⭐ FEATURED</div>
+                        <a href="{{ route('listings.show', $listing) }}" class="group bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-gray-300 hover:shadow-lg transition">
                             <div class="relative h-40 bg-gray-100 overflow-hidden">
                                 @if($listing->image_path)
                                     <img src="{{ asset('storage/' . $listing->image_path) }}" alt="{{ $listing->title }}" class="h-full w-full object-cover group-hover:scale-105 transition duration-300" />
@@ -131,7 +125,6 @@
         <section class="space-y-4">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-semibold text-sky-700 uppercase tracking-wide">Nieuw binnen</p>
                     <h2 class="text-2xl font-bold text-gray-900">Laatste listings</h2>
                 </div>
                 <a href="{{ route('listings.index') }}" class="text-sm font-semibold text-sky-700 hover:text-sky-800">Alles bekijken →</a>
@@ -148,6 +141,8 @@
                             @endif
                             @if($listing->is_sold)
                                 <span class="absolute top-3 right-3 px-3 py-1 text-xs font-semibold bg-red-500 text-white rounded-full">SOLD</span>
+                            @elseif($listing->is_reserved)
+                                <span class="absolute top-3 right-3 px-3 py-1 text-xs font-semibold bg-orange-500 text-white rounded-full">RESERVED</span>
                             @endif
                         </div>
                         <div class="p-4 space-y-2">
@@ -182,7 +177,6 @@
         <section class="space-y-4">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-semibold text-sky-700 uppercase tracking-wide">Updates</p>
                     <h2 class="text-2xl font-bold text-gray-900">Laatste nieuws</h2>
                 </div>
                 <a href="{{ route('news.index') }}" class="text-sm font-semibold text-sky-700 hover:text-sky-800">Alles lezen →</a>

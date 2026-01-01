@@ -21,6 +21,7 @@
                     <th class="px-4 py-3 text-left font-semibold text-gray-700">Price</th>
                     <th class="px-4 py-3 text-center font-semibold text-gray-700">Featured</th>
                     <th class="px-4 py-3 text-center font-semibold text-gray-700">Status</th>
+                    <th class="px-4 py-3 text-center font-semibold text-gray-700">Reserved</th>
                     <th class="px-4 py-3 text-right font-semibold text-gray-700">Actions</th>
                 </tr>
             </thead>
@@ -45,7 +46,7 @@
 
                         <td class="px-4 py-3 text-gray-600">
                             @if($listing->location_city || $listing->location_zip)
-                                <span class="text-xs">📍 {{ $listing->location_zip }} {{ $listing->location_city }}</span>
+                                <span class="text-xs">{{ $listing->location_zip }} {{ $listing->location_city }}</span>
                             @else
                                 <span class="text-gray-400">—</span>
                             @endif
@@ -67,7 +68,7 @@
                                     type="submit"
                                     class="px-3 py-1.5 rounded-lg text-xs font-semibold border transition {{ $listing->is_featured ? 'bg-amber-50 text-amber-700 border-amber-300 hover:bg-amber-100' : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100' }}"
                                 >
-                                    {{ $listing->is_featured ? '⭐ Yes' : 'No' }}
+                                    {{ $listing->is_featured ? 'Yes' : 'No' }}
                                 </button>
                             </form>
                         </td>
@@ -81,6 +82,19 @@
                                     class="px-3 py-1.5 rounded-lg text-xs font-semibold border transition {{ $listing->is_sold ? 'bg-red-50 text-red-700 border-red-300 hover:bg-red-100' : 'bg-green-50 text-green-700 border-green-300 hover:bg-green-100' }}"
                                 >
                                     {{ $listing->is_sold ? 'Sold' : 'Active' }}
+                                </button>
+                            </form>
+                        </td>
+
+                        <td class="px-4 py-3 text-center">
+                            <form method="POST" action="{{ route('admin.listings.toggleReserved', $listing) }}" class="inline">
+                                @csrf
+                                @method('PATCH')
+                                <button
+                                    type="submit"
+                                    class="px-3 py-1.5 rounded-lg text-xs font-semibold border transition @if($listing->is_reserved) bg-orange-50 text-orange-700 border-orange-300 hover:bg-orange-100 @else bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100 @endif"
+                                >
+                                    {{ $listing->is_reserved ? 'Yes' : 'No' }}
                                 </button>
                             </form>
                         </td>

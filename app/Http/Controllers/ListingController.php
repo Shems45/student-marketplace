@@ -305,8 +305,25 @@ class ListingController extends Controller
     {
         abort_unless(auth()->id() === $listing->user_id || auth()->user()->is_admin, 403);
 
-        $listing->update(['is_sold' => !$listing->is_sold]);
+        $isSold = !$listing->is_sold;
+        $listing->update([
+            'is_sold' => $isSold,
+            'is_reserved' => $isSold ? false : $listing->is_reserved
+        ]);
 
         return back()->with('status', $listing->is_sold ? 'Marked as sold.' : 'Marked as active.');
+    }
+
+    public function toggleReserved(Listing $listing)
+    {
+        abort_unless(auth()->id() === $listing->user_id || auth()->user()->is_admin, 403);
+
+        $isReserved = !$listing->is_reserved;
+        $listing->update([
+            'is_reserved' => $isReserved,
+            'is_sold' => $isReserved ? false : $listing->is_sold
+        ]);
+
+        return back()->with('status', $listing->is_reserved ? 'Marked as reserved.' : 'Reservation removed.');
     }
 }

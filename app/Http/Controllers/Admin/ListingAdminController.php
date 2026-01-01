@@ -27,11 +27,24 @@ class ListingAdminController extends Controller
 
     public function toggleSold(Listing $listing)
     {
+        $isSold = !$listing->is_sold;
         $listing->update([
-            'is_sold' => !$listing->is_sold,
+            'is_sold' => $isSold,
+            'is_reserved' => $isSold ? false : $listing->is_reserved,
         ]);
 
         return back()->with('status', 'Sold status updated.');
+    }
+
+    public function toggleReserved(Listing $listing)
+    {
+        $isReserved = !$listing->is_reserved;
+        $listing->update([
+            'is_reserved' => $isReserved,
+            'is_sold' => $isReserved ? false : $listing->is_sold,
+        ]);
+
+        return back()->with('status', 'Reserved status updated.');
     }
 
     public function destroy(Listing $listing)

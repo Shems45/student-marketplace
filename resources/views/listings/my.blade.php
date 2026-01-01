@@ -19,7 +19,11 @@
                                 <p class="text-gray-600 mb-3">{{ Str::limit($l->description, 150) }}</p>
 
                                 <div class="flex items-center gap-4 text-sm text-gray-500">
-                                    <span class="font-semibold text-blue-600">€{{ number_format($l->price, 2) }}</span>
+                                    @if(!is_null($l->price_cents))
+                                        <span class="font-semibold text-blue-600">€{{ number_format($l->price_cents / 100, 2) }}</span>
+                                    @else
+                                        <span class="font-semibold text-gray-600">Price on request</span>
+                                    @endif
                                     <span>{{ $l->category->name }}</span>
                                     <span>Posted {{ $l->created_at->diffForHumans() }}</span>
                                 </div>

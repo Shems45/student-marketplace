@@ -41,6 +41,8 @@
                                     <!-- Status Badge -->
                                     @if($listing->is_sold)
                                         <div class="absolute top-3 right-3 px-3 py-1 bg-red-500 text-white text-xs font-semibold rounded-full">SOLD</div>
+                                    @elseif($listing->is_reserved)
+                                        <div class="absolute top-3 right-3 px-3 py-1 bg-orange-500 text-white text-xs font-semibold rounded-full">RESERVED</div>
                                     @endif
                                 </div>
 

@@ -44,6 +44,10 @@
                     <div class="mb-8 p-4 bg-red-50 border border-red-200 rounded-lg">
                         <p class="text-sm font-semibold text-red-800">✕ This item has been sold</p>
                     </div>
+                @elseif($listing->is_reserved)
+                    <div class="mb-8 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                        <p class="text-sm font-semibold text-orange-800">⏳ This item is reserved</p>
+                    </div>
                 @endif
 
                 <!-- Tags -->
@@ -62,7 +66,7 @@
                 </div>
 
                 <!-- Owner Actions -->
-                @can('update', $listing)
+                @if(auth()->check() && auth()->id() === $listing->user_id)
                     <div class="border-t border-gray-200 pt-8">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Manage Listing</h3>
                         <div class="flex gap-3 flex-wrap">
@@ -73,7 +77,7 @@
                                 Edit
                             </a>
 
-                            <form method="POST" action="{{ route('listings.toggleSold', $listing) }}" class="inline">
+                            <form method="POST" action="{{ route('listings.toggleSold', $listing) }}">
                                 @csrf
                                 @method('PATCH')
                                 <button
@@ -84,7 +88,27 @@
                                 </button>
                             </form>
 
-                            <form method="POST" action="{{ route('listings.destroy', $listing) }}" onsubmit="return confirm('Delete this listing permanently?');" class="inline">
+                            <form method="POST" action="{{ route('listings.toggleReserved', $listing) }}">
+                                @csrf
+                                @method('PATCH')
+                                @if($listing->is_reserved)
+                                    <button
+                                        type="submit"
+                                        class="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white text-sm font-semibold rounded-lg transition"
+                                    >
+                                        Remove reservation
+                                    </button>
+                                @else
+                                    <button
+                                        type="submit"
+                                        class="px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold rounded-lg transition"
+                                    >
+                                        Mark as reserved
+                                    </button>
+                                @endif
+                            </form>
+
+                            <form method="POST" action="{{ route('listings.destroy', $listing) }}" onsubmit="return confirm('Delete this listing permanently?');">
                                 @csrf
                                 @method('DELETE')
                                 <button
@@ -96,7 +120,7 @@
                             </form>
                         </div>
                     </div>
-                @endcan
+                @endif
 
                 <!-- Admin Actions -->
                 @if(auth()->check() && auth()->user()->is_admin)
@@ -113,18 +137,72 @@
                             <span class="px-2.5 py-1 rounded-full border {{ $listing->is_sold ? 'bg-red-50 text-red-700 border-red-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200' }}">
                                 {{ $listing->is_sold ? 'Sold' : 'Active' }}
                             </span>
+                            @if($listing->is_reserved)
+                                <span class="px-2.5 py-1 rounded-full border bg-orange-50 text-orange-700 border-orange-200">
+                                    Reserved
+                                </span>
+                            @endif
                         </div>
 
                         <div class="flex flex-wrap gap-3">
                             <form method="POST" action="{{ route('admin.listings.toggleFeatured', $listing) }}" class="inline">
                                 @csrf
                                 @method('PATCH')
-                                <button
-                                    type="submit"
-                                    class="px-5 py-3 text-sm font-semibold rounded-lg border {{ $listing->is_featured ? 'bg-gray-900 text-white border-gray-900 hover:bg-gray-800' : 'bg-amber-500 text-white border-amber-600 hover:bg-amber-600' }} transition"
-                                >
-                                    {{ $listing->is_featured ? '⭐ Remove featured' : '⭐ Mark as featured' }}
-                                </button>
+                                @if($listing->is_featured)
+                                    <button
+                                        type="submit"
+                                        class="px-5 py-3 text-sm font-semibold rounded-lg border bg-gray-900 text-white border-gray-900 hover:bg-gray-800 transition"
+                                    >
+                                        ⭐ Remove featured
+                                    </button>
+                                @else
+                                    <button
+                                        type="submit"
+                                        class="px-5 py-3 text-sm font-semibold rounded-lg border bg-amber-500 text-white border-amber-600 hover:bg-amber-600 transition"
+                                    >
+                                        ⭐ Mark as featured
+                                    </button>
+                                @endif
+                            </form>
+
+                            <form method="POST" action="{{ route('admin.listings.toggleSold', $listing) }}">
+                                @csrf
+                                @method('PATCH')
+                                @if($listing->is_sold)
+                                    <button
+                                        type="submit"
+                                        class="px-5 py-3 text-sm font-semibold rounded-lg border bg-red-600 text-white border-red-700 hover:bg-red-700 transition"
+                                    >
+                                        Mark as active
+                                    </button>
+                                @else
+                                    <button
+                                        type="submit"
+                                        class="px-5 py-3 text-sm font-semibold rounded-lg border bg-green-500 text-white border-green-600 hover:bg-green-600 transition"
+                                    >
+                                        Mark as sold
+                                    </button>
+                                @endif
+                            </form>
+
+                            <form method="POST" action="{{ route('admin.listings.toggleReserved', $listing) }}">
+                                @csrf
+                                @method('PATCH')
+                                @if($listing->is_reserved)
+                                    <button
+                                        type="submit"
+                                        class="px-5 py-3 text-sm font-semibold rounded-lg border bg-gray-600 text-white border-gray-700 hover:bg-gray-700 transition"
+                                    >
+                                        Remove reserved
+                                    </button>
+                                @else
+                                    <button
+                                        type="submit"
+                                        class="px-5 py-3 text-sm font-semibold rounded-lg border bg-orange-500 text-white border-orange-600 hover:bg-orange-600 transition"
+                                    >
+                                        Mark as reserved
+                                    </button>
+                                @endif
                             </form>
 
                             <a href="{{ route('admin.listings.index') }}" class="px-5 py-3 text-sm font-semibold rounded-lg border bg-white text-gray-800 hover:bg-gray-50">

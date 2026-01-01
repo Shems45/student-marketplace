@@ -17,6 +17,7 @@ class Listing extends Model
         'price_cents',
         'image_path',
         'is_sold',
+        'is_reserved',
         'is_featured',
         'location_city',
         'location_zip',
@@ -28,6 +29,7 @@ class Listing extends Model
     {
         return [
             'is_sold' => 'boolean',
+            'is_reserved' => 'boolean',
             'is_featured' => 'boolean',
             'price_cents' => 'integer',
             'lat' => 'float',
