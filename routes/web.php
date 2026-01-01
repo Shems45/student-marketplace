@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\FaqCategoryAdminController;
 use App\Http\Controllers\Admin\FaqItemAdminController;
 use App\Http\Controllers\Admin\ContactMessageAdminController;
 use App\Http\Controllers\Admin\ListingAdminController;
+use App\Http\Controllers\Admin\DashboardController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -72,6 +73,8 @@ Route::get('/listings/{listing}', [ListingController::class, 'show'])->name('lis
 
 // Admin-only
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
     Route::resource('users', UserAdminController::class);
     Route::post('/users/{user}/toggle-admin', [UserAdminController::class, 'toggleAdmin'])->name('users.toggle-admin');
     Route::resource('news', NewsAdminController::class)->except(['show']);

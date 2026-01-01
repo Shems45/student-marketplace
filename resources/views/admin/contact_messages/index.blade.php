@@ -5,12 +5,14 @@
 
     <x-flash-message />
 
-    <form class="bg-white shadow rounded p-4 mb-6 flex gap-2" method="GET" action="{{ route('admin.contact-messages.index') }}">
-        <input class="flex-1 border-gray-300 rounded shadow-sm" name="q" placeholder="Search name/email/subject..." value="{{ $q ?? '' }}">
+    <form class="bg-white shadow rounded p-4 mb-6 flex gap-2" method="GET"
+        action="{{ route('admin.contact-messages.index') }}">
+        <input class="flex-1 border-gray-300 rounded shadow-sm" name="q" placeholder="Search name/email/subject..."
+            value="{{ $q ?? '' }}">
         <button class="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700">Search</button>
     </form>
 
-    @if($messages->isEmpty())
+    @if ($messages->isEmpty())
         <p class="text-gray-500">No contact messages found.</p>
     @else
         <div class="bg-white shadow rounded overflow-hidden">
@@ -25,21 +27,25 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($messages as $m)
+                    @foreach ($messages as $m)
                         <tr class="border-b hover:bg-gray-50">
                             <td class="px-6 py-4 text-sm">{{ $m->created_at->format('Y-m-d H:i') }}</td>
                             <td class="px-6 py-4">{{ $m->name }}</td>
                             <td class="px-6 py-4 text-sm">{{ $m->email }}</td>
                             <td class="px-6 py-4">
-                                <a class="text-blue-600 hover:underline" href="{{ route('admin.contact-messages.show', $m) }}">{{ $m->subject }}</a>
+                                <a class="text-blue-600 hover:underline"
+                                    href="{{ route('admin.contact-messages.show', $m) }}">{{ $m->subject }}</a>
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3 text-sm">
-                                    <a class="text-blue-600 hover:underline" href="{{ route('admin.contact-messages.show', $m) }}">Open</a>
-                                    <form method="POST" action="{{ route('admin.contact-messages.destroy', $m) }}" class="inline">
+                                    <a class="text-blue-600 hover:underline"
+                                        href="{{ route('admin.contact-messages.show', $m) }}">Open</a>
+                                    <form method="POST" action="{{ route('admin.contact-messages.destroy', $m) }}"
+                                        class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:underline" onclick="return confirm('Delete this message?')">Delete</button>
+                                        <button type="submit" class="text-red-600 hover:underline"
+                                            onclick="return confirm('Delete this message?')">Delete</button>
                                     </form>
                                 </div>
                             </td>
