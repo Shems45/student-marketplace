@@ -1,55 +1,40 @@
-# 📚 Student Marketplace
+# Student Marketplace
 
-A modern, feature-rich marketplace platform designed specifically for students to buy, sell, and exchange study materials, textbooks, gadgets, and furniture. Built with Laravel 12 and inspired by 2dehands.be, this platform provides a trusted environment for student-to-student transactions.
+A marketplace website for students to buy and sell study materials, textbooks, electronics, furniture, and more. Think 2dehands.be but specifically for students. Built with Laravel 12 for the Web Development 2 course.
 
-## ✨ Features
+## What This Project Does
 
-### Core Functionality
-- **Listings Management**: Create, edit, and manage product listings with images, categories, tags, and detailed descriptions
-- **Advanced Search**: Search listings by keyword, category, tags, location, and price range
-- **Location-Based**: Belgian city autocomplete with postal codes and distance calculations
-- **Status Management**: Mark items as sold, reserved, or featured
-- **Favorites System**: Save favorite listings for later viewing
-- **Real-time Messaging**: Built-in chat system between buyers and sellers
-- **User Profiles**: Public profiles with location, bio, and listing history
+This is a marketplace platform where students can:
+- Post items they want to sell with photos, prices, and descriptions
+- Browse and search for items by category, tags, location, and price
+- Message sellers directly through the platform
+- Save favorite listings to view later
+- See how far away items are based on location
 
-### Admin Features
-- **Comprehensive Dashboard**: Statistics overview with key metrics
-- **User Management**: Admin panel for managing users, listings, and content
-- **Content Moderation**: Review and manage contact messages, news items, and FAQs
-- **Role-Based Access**: Separate admin and user interfaces with proper authorization
+Admins can:
+- Manage all listings, users, and content through an admin panel
+- Post news updates and manage FAQs
+- Respond to contact form submissions
+- View platform statistics on the dashboard
 
-### Additional Features
-- **News Section**: Keep users informed with announcements and updates
-- **FAQ System**: Categorized frequently asked questions
-- **Contact Form**: Direct communication channel with administrators
-- **Email Notifications**: Automatic email notifications for messages and contact replies
-- **Modern UI**: Clean, responsive design with Heroicons and Tailwind CSS
-- **Custom Branding**: Professional SVG favicon and consistent visual identity
+## Tech Stack
 
-## 🛠 Tech Stack
+- Laravel 12.x with PHP 8.4
+- SQLite database (can be changed to MySQL/PostgreSQL if needed)
+- Tailwind CSS for styling
+- Laravel Breeze for authentication
+- Heroicons for icons
+- Vite for asset bundling
 
-- **Framework**: Laravel 12.x
-- **PHP**: 8.4.16
-- **Database**: SQLite (easily switchable to MySQL/PostgreSQL)
-- **Frontend**: 
-  - Tailwind CSS 3.x
-  - Alpine.js
-  - Heroicons (Blade UI Kit)
-  - Vite
-- **Email**: Gmail SMTP integration
-- **Queue**: Sync driver (configurable to Redis/database)
-- **Authentication**: Laravel Breeze
+## Requirements
 
-## 📋 Requirements
-
-- PHP >= 8.2
+Before you start, make sure you have:
+- PHP 8.2 or higher
 - Composer
-- Node.js >= 18.x and npm
-- SQLite (or MySQL/PostgreSQL)
+- Node.js (version 18 or higher) and npm
 - Git
 
-## 🚀 Installation
+## Installation Steps
 
 ### 1. Clone the Repository
 
@@ -68,28 +53,29 @@ composer install
 npm install
 ```
 
-### 3. Environment Configuration
+### 3. Set Up Environment
 
 ```bash
-# Copy the environment file
+# Copy the example environment file
 cp .env.example .env
 
 # Generate application key
 php artisan key:generate
 ```
 
-### 4. Configure Environment Variables
+### 4. Configure Your Environment
 
-Edit `.env` and update the following:
+Open the `.env` file and check these settings:
 
 ```env
 APP_NAME="Student Marketplace"
 APP_URL=http://localhost:8000
 
-# Database (SQLite is default, no additional config needed)
+# Database - SQLite is already configured by default
 DB_CONNECTION=sqlite
 
-# Mail Configuration (Gmail example)
+# Mail - For contact form emails (optional for local development)
+# You can use Gmail with an app password:
 MAIL_MAILER=smtp
 MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
@@ -100,189 +86,236 @@ MAIL_FROM_ADDRESS=your-email@gmail.com
 MAIL_FROM_NAME="${APP_NAME}"
 ```
 
-### 5. Database Setup
+**Note:** If you don't configure email, the contact form will still work but won't send emails. For testing, you can check the log files in `storage/logs/`.
+
+### 5. Set Up the Database
 
 ```bash
-# Create SQLite database file
+# Create the SQLite database file
 touch database/database.sqlite
 
-# Run migrations
+# Run migrations to create all tables
 php artisan migrate
 
-# (Optional) Seed with sample data
+# Seed the database with example data
 php artisan db:seed
 ```
 
-### 6. Storage Setup
+**Important:** The seeder will create the required admin account and some sample listings/users.
+
+### 6. Link Storage
 
 ```bash
-# Create storage link for public file access
+# Create symbolic link for file uploads
 php artisan storage:link
 ```
 
-### 7. Build Assets
+### 7. Build Frontend Assets
 
 ```bash
-# Development
+# For development (watches for changes)
 npm run dev
 
-# Production
+# OR for production (one-time build)
 npm run build
 ```
 
 ### 8. Start the Application
 
 ```bash
-# Using Laravel's built-in server
+# Start Laravel's built-in development server
 php artisan serve
-
-# Or using Laravel Herd (recommended for local development)
-# Just navigate to the project folder in your browser
 ```
 
-Visit `http://localhost:8000` in your browser.
+Now open your browser and go to `http://localhost:8000`
 
-## 👥 Default Users
+**If you're using Laravel Herd:** Just navigate to the project folder in your browser (e.g., `http://student-marketplace.test`)
 
-After seeding, you can log in with:
+## Login Credentials
 
-**Admin User:**
-- Email: admin@student-marketplace.test
-- Password: password
+After running the seeder, you can log in with these accounts:
 
-**Regular User:**
-- Email: user@student-marketplace.test
-- Password: password
+**Admin Account (required by assignment):**
+- Email: `admin@ehb.be`
+- Password: `Password!321`
 
-## 📁 Project Structure
+**Regular User Accounts (for testing):**
+- Email: `alice@student.ehb.be` / Password: `password`
+- Email: `bob@student.ehb.be` / Password: `password`
+- Email: `claire@student.ehb.be` / Password: `password`
+
+## Project Features
+
+### For Regular Users
+- Create an account and log in
+- Edit your profile with username, birthday, profile photo, and bio
+- Post listings with photos, categories, tags, and location
+- Search for listings by category, tags, location, and price
+- Message sellers directly
+- Save favorite listings
+- View your own listings and conversations
+
+### For Admins
+- Access admin panel at `/admin`
+- Manage all users (create users, make users admin, remove admin rights)
+- Manage all listings
+- Post and manage news items
+- Manage FAQ categories and items
+- View and respond to contact form messages
+- See platform statistics on dashboard
+
+## Assignment Requirements Coverage
+
+This project fulfills all the assignment requirements:
+
+**Login System:**
+- ✅ Visitors can log in
+- ✅ Anyone can create a new account
+- ✅ User accounts are either regular users or admins
+- ✅ Only admins can promote/demote other users
+- ✅ Only admins can manually create new users
+
+**Profile Pages:**
+- ✅ Every user has a public profile page accessible to everyone
+- ✅ Users can edit their own profile
+- ✅ Profiles include: username, birthday, profile photo, and bio
+
+**News Section:**
+- ✅ Admins can create, edit, and delete news items
+- ✅ Everyone can view a list of news and individual news details
+- ✅ News items have: title, image, content, and publication date
+
+**FAQ Page:**
+- ✅ FAQs are grouped by category
+- ✅ Admins can manage categories and FAQ items
+- ✅ Everyone can view the FAQ page
+
+**Contact Page:**
+- ✅ Anyone can fill in a contact form
+- ✅ Submitting the form sends an email to the admin
+- ✅ Admins can view and respond to messages in the admin panel
+
+**Extra Features (for higher grade):**
+- ✅ Real-time messaging system between buyers and sellers
+- ✅ Favorites/bookmarking system
+- ✅ Advanced search with multiple filters
+- ✅ Location-based features with distance calculations
+- ✅ Admin dashboard with statistics
+- ✅ Image uploads for listings and profiles
+
+**Technical Requirements:**
+- ✅ Multiple layouts (public layout and admin layout)
+- ✅ Reusable Blade components
+- ✅ CSRF protection on all forms
+- ✅ XSS protection (Blade automatic escaping)
+- ✅ Client-side validation (HTML5 validation attributes)
+- ✅ All routes use controller methods
+- ✅ Proper middleware usage (auth, admin)
+- ✅ Grouped routes
+- ✅ Resource controllers for CRUD operations
+- ✅ Eloquent models for all entities
+- ✅ One-to-many relationships (User→Listings, Category→Listings, etc.)
+- ✅ Many-to-many relationships (Listing↔Tags, User↔Listings for favorites)
+- ✅ Migrations and seeders work with `php artisan migrate:fresh --seed`
+- ✅ Default admin account (admin@ehb.be / Password!321)
+- ✅ Authentication system with login, logout, register, remember me, password reset## Database Models and Relationships
+
+**Models:**
+- User - User accounts with authentication
+- Listing - Items posted for sale
+- Category - Categories for listings (Books, Electronics, etc.)
+- Tag - Tags for better listing discoverability
+- Conversation - Chat conversations between users
+- Message - Individual chat messages
+- NewsItem - News posts created by admins
+- FaqCategory - FAQ categories
+- FaqItem - Individual FAQ questions and answers
+- ContactMessage - Messages sent through contact form
+
+**Relationships:**
+- One-to-Many: User → Listings, User → News Items, Category → Listings, Conversation → Messages
+- Many-to-Many: Listing ↔ Tags, User ↔ Listings (favorites table)
+
+## File Structure
 
 ```
-├── app/
-│   ├── Http/Controllers/      # Application controllers
-│   ├── Models/                # Eloquent models
-│   └── Providers/             # Service providers
-├── database/
-│   ├── migrations/            # Database migrations
-│   └── seeders/               # Database seeders
-├── resources/
-│   ├── views/                 # Blade templates
-│   ├── css/                   # Stylesheets
-│   └── js/                    # JavaScript files
-├── routes/
-│   ├── web.php               # Web routes
-│   └── auth.php              # Authentication routes
-└── public/
-    └── storage/              # Public file storage (symlink)
+app/
+├── Http/
+│   ├── Controllers/          # All controllers (resource controllers for CRUD)
+│   │   ├── Admin/           # Admin panel controllers
+│   │   └── Auth/            # Authentication controllers
+│   ├── Middleware/          # Custom middleware (AdminMiddleware)
+│   └── Requests/            # Form request validation
+├── Models/                  # Eloquent models
+├── Policies/                # Authorization policies
+└── Mail/                    # Mailable classes
+
+resources/
+├── views/
+│   ├── components/          # Reusable Blade components
+│   │   ├── layouts/         # Layout components (public, admin)
+│   │   └── ui/              # UI components
+│   ├── admin/               # Admin panel views
+│   ├── listings/            # Listing views
+│   ├── profiles/            # Profile views
+│   ├── news/                # News views
+│   ├── faq/                 # FAQ views
+│   └── contact/             # Contact form views
+├── css/                     # Tailwind CSS
+└── js/                      # JavaScript files
+
+routes/
+├── web.php                  # Main routes (grouped with middleware)
+└── auth.php                 # Authentication routes (Laravel Breeze)
+
+database/
+├── migrations/              # Database structure
+└── seeders/                 # Sample data (includes required admin)
 ```
 
-## 🎨 Key Models
+## Common Issues and Solutions
 
-- **User**: Platform users with profiles and authentication
-- **Listing**: Product listings with images, prices, and locations
-- **Category**: Listing categories (Books, Electronics, Furniture, etc.)
-- **Tag**: Flexible tagging system for listings
-- **Conversation**: Chat conversations between users
-- **Message**: Individual messages in conversations
-- **NewsItem**: News and announcements
-- **FaqCategory** & **FaqItem**: FAQ system
-- **ContactMessage**: Contact form submissions
+**Problem:** `npm run dev` fails
+- **Solution:** Make sure you ran `npm install` first
 
-## 🔧 Configuration
+**Problem:** Images don't show up
+- **Solution:** Run `php artisan storage:link` to create the symbolic link
 
-### Email Setup
+**Problem:** Database errors when running migrations
+- **Solution:** Make sure the `database/database.sqlite` file exists. Run `touch database/database.sqlite` on Mac/Linux or create an empty file on Windows.
 
-For Gmail SMTP:
-1. Enable 2-factor authentication on your Google account
-2. Generate an App Password at https://myaccount.google.com/apppasswords
-3. Use the App Password in `MAIL_PASSWORD` in `.env`
+**Problem:** Contact form doesn't send emails
+- **Solution:** Make sure you configured the mail settings in `.env`. For local testing, emails are logged in `storage/logs/laravel.log`
 
-### Queue Configuration
+**Problem:** "Access denied" when trying to access admin panel
+- **Solution:** Make sure you're logged in with the admin account (`admin@ehb.be`)
 
-For production, configure a queue driver (Redis recommended):
+## Sources and References
 
-```env
-QUEUE_CONNECTION=redis
-```
+During development, I used the following resources:
 
-Then run the queue worker:
+- Laravel documentation: https://laravel.com/docs
+- Tailwind CSS documentation: https://tailwindcss.com/docs
+- Stack Overflow for troubleshooting specific issues
+- Laravel Breeze documentation for authentication setup
+- Heroicons for icon components: https://heroicons.com
+- Course materials and exercises from Web Development 2
 
-```bash
-php artisan queue:work
-```
+Specific code snippets adapted from:
+- Haversine formula for distance calculation between coordinates (from Stack Overflow)
+- Belgian city/postal code autocomplete logic (custom implementation)
+- Email notification setup (Laravel documentation)
 
-### File Storage
+All adapted code was understood, modified for this project, and properly tested.
 
-Images are stored in `storage/app/public` and symlinked to `public/storage`. Ensure proper permissions:
+## Notes
 
-```bash
-chmod -R 775 storage bootstrap/cache
-```
+This project was built for the Web Development 2 course at Erasmushogeschool Brussel. The marketplace concept is inspired by 2dehands.be but tailored specifically for student needs (textbooks, electronics, furniture, etc.).
 
-## 🌐 Usage
+The project uses SQLite by default for ease of setup, but can be easily switched to MySQL or PostgreSQL by changing the database configuration in `.env`.
 
-### Creating a Listing
-1. Register/Login to your account
-2. Click "Create Listing" in the header
-3. Fill in title, description, price, category, and location
-4. Upload an image (optional)
-5. Add tags for better discoverability
-6. Submit to publish
-
-### Managing Listings
-- **Edit**: Update listing details anytime
-- **Delete**: Remove listings you no longer need
-- **Mark as Sold**: Indicate when an item is sold
-- **Mark as Reserved**: Show when an item is reserved for someone
-- **Feature**: Admins can feature listings on the homepage
-
-### Messaging
-- Click "Contact Seller" on any listing
-- Start a conversation directly with the seller
-- Receive notifications for new messages
-- View all conversations in your inbox
-
-### Admin Panel
-Access the admin panel at `/admin` (requires admin privileges):
-- View comprehensive statistics
-- Manage all users and listings
-- Moderate contact messages
-- Manage news and FAQs
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
-## 🙏 Acknowledgments
-
-- Built with [Laravel](https://laravel.com)
-- UI components from [Tailwind CSS](https://tailwindcss.com)
-- Icons by [Heroicons](https://heroicons.com)
-- Inspired by [2dehands.be](https://www.2dehands.be)
-
-## 📧 Support
-
-For support, email support@student-marketplace.test or create an issue in the repository.
-
----
-
-Made with ❤️ for students, by students
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+All images uploaded by users are stored in `storage/app/public` and linked to `public/storage` for web access.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-source and available under the MIT License.
