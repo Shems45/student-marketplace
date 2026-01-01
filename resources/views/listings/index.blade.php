@@ -167,8 +167,8 @@
                                             class="h-full w-full object-cover group-hover:scale-105 transition duration-300"
                                         />
                                     @else
-                                        <div class="h-full w-full flex items-center justify-center text-gray-300 text-5xl">
-                                            📦
+                                        <div class="h-full w-full flex items-center justify-center bg-gray-100">
+                                            <x-heroicon-o-cube class="w-16 h-16 text-gray-300" />
                                         </div>
                                     @endif
                                 </div>

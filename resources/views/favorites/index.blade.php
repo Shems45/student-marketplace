@@ -9,7 +9,9 @@
         <!-- Listings Grid -->
         @if($listings->isEmpty())
             <div class="text-center py-20">
-                <div class="text-5xl mb-4">❤️</div>
+                <div class="flex justify-center mb-4">
+                    <x-heroicon-o-heart class="w-16 h-16 text-gray-300" />
+                </div>
                 <h2 class="text-2xl font-bold text-gray-900 mb-2">No favorites yet</h2>
                 <p class="text-gray-600 mb-6">Start adding listings to your favorites</p>
                 <a href="{{ route('listings.index') }}" class="inline-block px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition">Browse listings</a>

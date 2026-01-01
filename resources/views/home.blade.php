@@ -89,7 +89,9 @@
                                 @if($listing->image_path)
                                     <img src="{{ asset('storage/' . $listing->image_path) }}" alt="{{ $listing->title }}" class="h-full w-full object-cover group-hover:scale-105 transition duration-300" />
                                 @else
-                                    <div class="h-full w-full flex items-center justify-center text-gray-300 text-4xl">📦</div>
+                                    <div class="h-full w-full flex items-center justify-center bg-gray-100">
+                                        <x-heroicon-o-cube class="w-12 h-12 text-gray-300" />
+                                    </div>
                                 @endif
                             </div>
                             <div class="p-4 space-y-2">
@@ -100,7 +102,7 @@
                                 <h3 class="text-base font-semibold text-gray-900 line-clamp-2 group-hover:text-gray-700">{{ $listing->title }}</h3>
                                 <p class="text-sm text-gray-600">{{ $listing->user->username }}</p>
                                 @if($listing->location_city || $listing->location_zip)
-                                    <p class="text-xs text-gray-500">📍 {{ trim(($listing->location_zip ?? '') . ' ' . ($listing->location_city ?? '')) }}</p>
+                                    <p class="text-xs text-gray-500 flex items-center gap-1"><x-heroicon-o-map-pin class="w-3 h-3" /> {{ trim(($listing->location_zip ?? '') . ' ' . ($listing->location_city ?? '')) }}</p>
                                 @endif
                                 <div class="pt-3 flex items-center justify-between border-t border-gray-100">
                                     <span class="text-xl font-bold text-sky-700">
@@ -137,7 +139,9 @@
                             @if($listing->image_path)
                                 <img src="{{ asset('storage/' . $listing->image_path) }}" alt="{{ $listing->title }}" class="h-full w-full object-cover group-hover:scale-105 transition duration-300" />
                             @else
-                                <div class="h-full w-full flex items-center justify-center text-gray-300 text-4xl">📦</div>
+                                <div class="h-full w-full flex items-center justify-center bg-gray-100">
+                                    <x-heroicon-o-cube class="w-12 h-12 text-gray-300" />
+                                </div>
                             @endif
                             @if($listing->is_sold)
                                 <span class="absolute top-3 right-3 px-3 py-1 text-xs font-semibold bg-red-500 text-white rounded-full">SOLD</span>

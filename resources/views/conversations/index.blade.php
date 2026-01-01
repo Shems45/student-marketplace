@@ -9,7 +9,9 @@
 
         @if($conversations->isEmpty())
             <div class="bg-white border border-gray-100 rounded-xl p-10 text-center shadow-sm">
-                <div class="text-5xl mb-3">💬</div>
+                <div class="flex justify-center mb-3">
+                    <x-heroicon-o-chat-bubble-left-right class="w-16 h-16 text-gray-300" />
+                </div>
                 <p class="text-gray-700 font-semibold mb-2">No conversations yet</p>
                 <p class="text-sm text-gray-500 mb-6">Start by messaging a seller on a listing.</p>
                 <a href="{{ route('listings.index') }}" class="inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold bg-gray-900 text-white hover:bg-gray-800">

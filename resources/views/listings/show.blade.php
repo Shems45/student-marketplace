@@ -18,8 +18,8 @@
                             class="w-full h-64 md:h-80 object-cover"
                         />
                     @else
-                        <div class="w-full h-64 md:h-80 flex items-center justify-center text-gray-400 text-6xl">
-                            📦
+                        <div class="w-full h-64 md:h-80 flex items-center justify-center bg-gray-100">
+                            <x-heroicon-o-cube class="w-20 h-20 text-gray-300" />
                         </div>
                     @endif
                 </div>
@@ -33,8 +33,9 @@
                     <p class="text-gray-600">Posted by <a href="{{ route('profiles.show', $listing->user) }}" class="font-semibold text-gray-900 hover:underline">{{ $listing->user->username }}</a> • {{ $listing->created_at->diffForHumans() }}</p>
 
                     @if($listing->location_city || $listing->location_zip)
-                        <p class="text-sm text-gray-600 mt-1">
-                            📍 {{ trim(($listing->location_zip ?? '') . ' ' . ($listing->location_city ?? '')) }}
+                        <p class="text-sm text-gray-600 mt-1 flex items-center gap-2">
+                            <x-heroicon-o-map-pin class="w-4 h-4" />
+                            {{ trim(($listing->location_zip ?? '') . ' ' . ($listing->location_city ?? '')) }}
                         </p>
                     @endif
                 </div>
@@ -255,16 +256,18 @@
                             @if(!$isFav)
                                 <form method="POST" action="{{ route('favorites.store', $listing) }}">
                                     @csrf
-                                    <button type="submit" class="w-full px-6 py-3 border border-gray-300 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-50 transition">
-                                        ❤️ Save to favorites
+                                    <button type="submit" class="w-full px-6 py-3 border border-gray-300 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-50 transition flex items-center justify-center gap-2">
+                                        <x-heroicon-o-heart class="w-5 h-5" />
+                                        Save to favorites
                                     </button>
                                 </form>
                             @else
                                 <form method="POST" action="{{ route('favorites.destroy', $listing) }}">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="w-full px-6 py-3 border border-gray-300 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-50 transition">
-                                        💔 Remove from favorites
+                                    <button type="submit" class="w-full px-6 py-3 border border-gray-300 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-50 transition flex items-center justify-center gap-2">
+                                        <x-heroicon-o-heart-solid class="w-5 h-5 text-red-500" />
+                                        Remove from favorites
                                     </button>
                                 </form>
                             @endif

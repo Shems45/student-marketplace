@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ isset($title) ? $title . ' - ' . config('app.name', 'Student Marketplace') : config('app.name', 'Student Marketplace') }}</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="min-h-screen bg-gray-50 text-gray-900 antialiased">
@@ -13,7 +14,7 @@
             <div class="flex items-center gap-6 h-16">
                 <!-- Logo -->
                 <a href="{{ route('home') }}" class="flex items-center gap-2 font-semibold text-lg text-gray-900 hover:text-gray-700 transition whitespace-nowrap">
-                    <span class="text-2xl">📚</span>
+                    <x-heroicon-o-book-open class="w-6 h-6 text-blue-600" />
                     <span class="hidden sm:inline">Student Marketplace</span>
                 </a>
 
@@ -64,7 +65,10 @@
                                 <a href="{{ route('listings.mine') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 border-b border-gray-100">My listings</a>
                                 <a href="{{ route('listings.create') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 border-b border-gray-100">Create listing</a>
                                 @if(auth()->user()->is_admin)
-                                    <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-amber-700 font-semibold hover:bg-amber-50 border-b border-gray-100">⚙️ Admin Panel</a>
+                                    <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-amber-700 font-semibold hover:bg-amber-50 border-b border-gray-100 flex items-center gap-2">
+                                        <x-heroicon-o-cog-6-tooth class="w-4 h-4" />
+                                        Admin Panel
+                                    </a>
                                 @endif
                                 <form method="POST" action="{{ route('logout') }}" class="block">
                                     @csrf

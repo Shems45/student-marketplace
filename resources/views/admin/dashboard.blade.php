@@ -12,7 +12,9 @@
                     <p class="text-sm font-medium text-gray-600">Total Users</p>
                     <p class="text-3xl font-bold text-gray-900 mt-2">{{ $stats['users_total'] ?? 0 }}</p>
                 </div>
-                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-xl">👥</div>
+                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <x-heroicon-o-users class="w-6 h-6 text-blue-600" />
+                </div>
             </div>
         </div>
 
@@ -23,7 +25,9 @@
                     <p class="text-sm font-medium text-gray-600">Total Listings</p>
                     <p class="text-3xl font-bold text-gray-900 mt-2">{{ $stats['listings_total'] ?? 0 }}</p>
                 </div>
-                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center text-xl">📦</div>
+                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <x-heroicon-o-inbox-stack class="w-6 h-6 text-purple-600" />
+                </div>
             </div>
         </div>
 
@@ -34,7 +38,9 @@
                     <p class="text-sm font-medium text-gray-600">Active Listings</p>
                     <p class="text-3xl font-bold text-emerald-600 mt-2">{{ $stats['listings_active'] ?? 0 }}</p>
                 </div>
-                <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center text-xl">✅</div>
+                <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center">
+                    <x-heroicon-o-check-circle class="w-6 h-6 text-emerald-600" />
+                </div>
             </div>
         </div>
 
@@ -45,7 +51,9 @@
                     <p class="text-sm font-medium text-gray-600">Sold Listings</p>
                     <p class="text-3xl font-bold text-red-600 mt-2">{{ $stats['listings_sold'] ?? 0 }}</p>
                 </div>
-                <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center text-xl">✕</div>
+                <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                    <x-heroicon-o-x-circle class="w-6 h-6 text-red-600" />
+                </div>
             </div>
         </div>
 
@@ -56,7 +64,9 @@
                     <p class="text-sm font-medium text-gray-600">Reserved Listings</p>
                     <p class="text-3xl font-bold text-orange-600 mt-2">{{ $stats['listings_reserved'] ?? 0 }}</p>
                 </div>
-                <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center text-xl">⏳</div>
+                <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <x-heroicon-o-clock class="w-6 h-6 text-orange-600" />
+                </div>
             </div>
         </div>
 
@@ -67,7 +77,9 @@
                     <p class="text-sm font-medium text-gray-600">Featured Listings</p>
                     <p class="text-3xl font-bold text-amber-600 mt-2">{{ $stats['listings_featured'] ?? 0 }}</p>
                 </div>
-                <div class="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center text-xl">⭐</div>
+                <div class="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center">
+                    <x-heroicon-o-star class="w-6 h-6 text-amber-600" />
+                </div>
             </div>
         </div>
 
@@ -78,7 +90,9 @@
                     <p class="text-sm font-medium text-gray-600">Favorites</p>
                     <p class="text-3xl font-bold text-pink-600 mt-2">{{ $stats['favorites_total'] ?? 0 }}</p>
                 </div>
-                <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center text-xl">❤️</div>
+                <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
+                    <x-heroicon-o-heart class="w-6 h-6 text-pink-600" />
+                </div>
             </div>
         </div>
 
@@ -90,7 +104,9 @@
                     <p class="text-3xl font-bold text-sky-600 mt-2">{{ $stats['contact_total'] ?? 0 }}</p>
                     <p class="text-xs text-red-600 mt-2 font-medium">Unanswered: {{ $stats['contact_unanswered'] ?? 0 }}</p>
                 </div>
-                <div class="w-12 h-12 bg-sky-100 rounded-lg flex items-center justify-center text-xl">💬</div>
+                <div class="w-12 h-12 bg-sky-100 rounded-lg flex items-center justify-center">
+                    <x-heroicon-o-envelope class="w-6 h-6 text-sky-600" />
+                </div>
             </div>
         </div>
 
@@ -101,7 +117,9 @@
                     <p class="text-sm font-medium text-gray-600">Conversations</p>
                     <p class="text-3xl font-bold text-indigo-600 mt-2">{{ $stats['conversations_total'] ?? 0 }}</p>
                 </div>
-                <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center text-xl">💬</div>
+                <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
+                    <x-heroicon-o-chat-bubble-left-right class="w-6 h-6 text-indigo-600" />
+                </div>
             </div>
         </div>
 
@@ -113,7 +131,9 @@
                     <p class="text-3xl font-bold text-violet-600 mt-2">{{ $stats['messages_total'] ?? 0 }}</p>
                     <p class="text-xs text-orange-600 mt-2 font-medium">Unread: {{ $stats['messages_unread'] ?? 0 }}</p>
                 </div>
-                <div class="w-12 h-12 bg-violet-100 rounded-lg flex items-center justify-center text-xl">✉️</div>
+                <div class="w-12 h-12 bg-violet-100 rounded-lg flex items-center justify-center">
+                    <x-heroicon-o-paper-airplane class="w-6 h-6 text-violet-600" />
+                </div>
             </div>
         </div>
     </div>

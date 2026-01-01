@@ -45,7 +45,9 @@
                 @empty
                     <div class="flex items-center justify-center h-full">
                         <div class="text-center">
-                            <p class="text-6xl mb-3">💬</p>
+                            <div class="flex justify-center mb-3">
+                                <x-heroicon-o-chat-bubble-left-right class="w-20 h-20 text-gray-300" />
+                            </div>
                             <p class="text-gray-600">No messages yet. Start the conversation!</p>
                         </div>
                     </div>
