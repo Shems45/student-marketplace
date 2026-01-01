@@ -68,7 +68,6 @@ class UserAdminController extends Controller
 
     public function toggleAdmin(User $user)
     {
-        // voorkom dat je jezelf per ongeluk demote
         if ($user->id === auth()->id()) {
             return back()->with('status', 'You cannot change your own admin role.');
         }

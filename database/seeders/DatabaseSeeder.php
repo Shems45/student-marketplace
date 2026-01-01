@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Default admin (REQUIREMENT)
+        // Admin account voor opdracht
         $admin = User::firstOrCreate(
             ['email' => 'admin@ehb.be'],
             [
@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // Regular users (idempotent)
+        // Test gebruikers
         $user1 = User::firstOrCreate(
             ['email' => 'alice@student.ehb.be'],
             [
@@ -63,7 +63,7 @@ class DatabaseSeeder extends Seeder
 
         $users = collect([$admin, $user1, $user2, $user3]);
 
-        // Categories (idempotent)
+        // Categorieën
         $catBooks = Category::firstOrCreate(['name' => 'Books']);
         $catElectronics = Category::firstOrCreate(['name' => 'Electronics']);
         $catFurniture = Category::firstOrCreate(['name' => 'Furniture']);
@@ -73,7 +73,7 @@ class DatabaseSeeder extends Seeder
 
         $categories = collect([$catBooks, $catElectronics, $catFurniture, $catSports, $catClothing, $catOther]);
 
-        // Tags (idempotent)
+        // Tags voor listings
         $tagNew = Tag::firstOrCreate(['name' => 'New']);
         $tagUsed = Tag::firstOrCreate(['name' => 'Used']);
         $tagNegotiable = Tag::firstOrCreate(['name' => 'Negotiable']);
@@ -81,7 +81,7 @@ class DatabaseSeeder extends Seeder
 
         $tags = collect([$tagNew, $tagUsed, $tagNegotiable, $tagUrgent]);
 
-        // Belgian locations with fixed coordinates (for distance testing)
+        // Belgische locaties voor test data
         $belgianLocations = [
             ['city' => 'Brussels', 'zip' => '1000', 'lat' => 50.8503, 'lng' => 4.3517],
             ['city' => 'Ghent', 'zip' => '9000', 'lat' => 51.0543, 'lng' => 3.7174],
@@ -93,7 +93,7 @@ class DatabaseSeeder extends Seeder
             ['city' => 'Namur', 'zip' => '5000', 'lat' => 50.4674, 'lng' => 4.8720],
         ];
 
-        // Listings with fixed Belgian locations (idempotent by title)
+        // Listings
         $listingsData = [
             ['title' => 'Marketing Principles Textbook 5th Edition', 'desc' => 'Excellent condition, barely used. Perfect for first-year marketing students.', 'price' => 2500, 'cat' => $catBooks, 'loc' => $belgianLocations[0], 'featured' => true],
             ['title' => 'MacBook Pro 13-inch 2020', 'desc' => 'Great for students. 8GB RAM, 256GB SSD. Battery health 92%.', 'price' => 75000, 'cat' => $catElectronics, 'loc' => $belgianLocations[1], 'featured' => true],
@@ -129,7 +129,6 @@ class DatabaseSeeder extends Seeder
                 ]
             );
 
-            // Attach 1-3 random tags if not already attached
             if ($listing->wasRecentlyCreated) {
                 $listing->tags()->attach(
                     $tags->random(rand(1, 3))->pluck('id')->all()
@@ -137,7 +136,7 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        // News items (authored by admin)
+        // Nieuws
         NewsItem::firstOrCreate(
             ['title' => 'Welcome to Student Marketplace'],
             [

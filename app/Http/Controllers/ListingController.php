@@ -116,9 +116,7 @@ class ListingController extends Controller
         ));
     }
 
-    /**
-     * Haversine formula to calculate distance between two coordinates in km.
-     */
+    // Calculate distance between two coordinates using Haversine formula
     private function haversineDistance(float $lat1, float $lon1, float $lat2, float $lon2): float
     {
         $earthRadius = 6371; // km
@@ -135,9 +133,6 @@ class ListingController extends Controller
         return $earthRadius * $c;
     }
 
-    /**
-     * Helper to get radius from request.
-     */
     private function getRadiusFromRequest(): ?int
     {
         $radius = request('radius');

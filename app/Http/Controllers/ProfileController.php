@@ -10,7 +10,6 @@ class ProfileController extends Controller
 {
     public function show(User $user)
     {
-        // route model binding via {user:username}
         $user->load(['listings' => function ($q) {
             $q->latest()->take(10);
         }]);
