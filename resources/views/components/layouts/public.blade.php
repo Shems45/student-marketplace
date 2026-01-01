@@ -60,10 +60,11 @@
                             </summary>
                             <div class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-md py-1 z-50">
                                 <a href="{{ route('profiles.show', auth()->user()) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 border-b border-gray-100">Profile</a>
+                                <a href="{{ route('favorites.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 border-b border-gray-100">Favorites</a>
                                 <a href="{{ route('listings.mine') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 border-b border-gray-100">My listings</a>
                                 <a href="{{ route('listings.create') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 border-b border-gray-100">Create listing</a>
                                 @if(auth()->user()->is_admin)
-                                    <a href="{{ url('/admin/users') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 border-b border-gray-100">Admin</a>
+                                    <a href="{{ route('admin.listings.index') }}" class="block px-4 py-2 text-sm text-amber-700 font-semibold hover:bg-amber-50 border-b border-gray-100">⚙️ Admin Panel</a>
                                 @endif
                                 <form method="POST" action="{{ route('logout') }}" class="block">
                                     @csrf

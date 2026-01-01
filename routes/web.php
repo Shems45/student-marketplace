@@ -4,6 +4,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\FaqController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NewsController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Admin\NewsAdminController;
 use App\Http\Controllers\Admin\FaqCategoryAdminController;
 use App\Http\Controllers\Admin\FaqItemAdminController;
 use App\Http\Controllers\Admin\ContactMessageAdminController;
+use App\Http\Controllers\Admin\ListingAdminController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -44,6 +46,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/listings/{listing}/edit', [ListingController::class, 'edit'])->name('listings.edit');
     Route::put('/listings/{listing}', [ListingController::class, 'update'])->name('listings.update');
     Route::delete('/listings/{listing}', [ListingController::class, 'destroy'])->name('listings.destroy');
+    Route::patch('/listings/{listing}/toggle-sold', [ListingController::class, 'toggleSold'])->name('listings.toggleSold');
+
+    // Favorites
+    Route::post('/listings/{listing}/favorite', [FavoriteController::class, 'store'])->name('favorites.store');
+    Route::delete('/listings/{listing}/favorite', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
+    Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
 
     // My Listings
     Route::get('/my-listings', function () {
@@ -69,6 +77,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::resource('faq-categories', FaqCategoryAdminController::class);
     Route::resource('faq-items', FaqItemAdminController::class);
     Route::resource('contact-messages', ContactMessageAdminController::class)->only(['index', 'show', 'destroy']);
+    Route::post('/contact-messages/{contactMessage}/reply', [ContactMessageAdminController::class, 'reply'])->name('contact-messages.reply');
+
+    // Listings management
+    Route::get('/listings', [ListingAdminController::class, 'index'])->name('listings.index');
+    Route::patch('/listings/{listing}/toggle-featured', [ListingAdminController::class, 'toggleFeatured'])->name('listings.toggleFeatured');
+    Route::patch('/listings/{listing}/toggle-sold', [ListingAdminController::class, 'toggleSold'])->name('listings.toggleSold');
+    Route::delete('/listings/{listing}', [ListingAdminController::class, 'destroy'])->name('listings.destroy');
 });
 
 require __DIR__.'/auth.php';

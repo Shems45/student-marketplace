@@ -65,13 +65,24 @@
                 @can('update', $listing)
                     <div class="border-t border-gray-200 pt-8">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Manage Listing</h3>
-                        <div class="flex gap-3">
+                        <div class="flex gap-3 flex-wrap">
                             <a
                                 href="{{ route('listings.edit', $listing) }}"
                                 class="px-6 py-3 bg-gray-900 text-white text-sm font-semibold rounded-lg hover:bg-gray-800 transition"
                             >
                                 Edit
                             </a>
+
+                            <form method="POST" action="{{ route('listings.toggleSold', $listing) }}" class="inline">
+                                @csrf
+                                @method('PATCH')
+                                <button
+                                    type="submit"
+                                    class="px-6 py-3 bg-green-600 text-white text-sm font-semibold rounded-lg hover:bg-green-700 transition"
+                                >
+                                    {{ $listing->is_sold ? 'Mark as active' : 'Mark as sold' }}
+                                </button>
+                            </form>
 
                             <form method="POST" action="{{ route('listings.destroy', $listing) }}" onsubmit="return confirm('Delete this listing permanently?');" class="inline">
                                 @csrf
@@ -86,6 +97,42 @@
                         </div>
                     </div>
                 @endcan
+
+                <!-- Admin Actions -->
+                @if(auth()->check() && auth()->user()->is_admin)
+                    <div class="border border-gray-200 bg-white rounded-xl p-5 mt-12 shadow-sm max-w-2xl space-y-4">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg">⚙️</span>
+                            <h3 class="text-lg font-semibold text-gray-900">Admin Controls</h3>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2 text-sm">
+                            <span class="px-2.5 py-1 rounded-full border {{ $listing->is_featured ? 'bg-amber-50 text-amber-800 border-amber-200' : 'bg-gray-50 text-gray-700 border-gray-200' }}">
+                                {{ $listing->is_featured ? 'Featured: yes' : 'Featured: no' }}
+                            </span>
+                            <span class="px-2.5 py-1 rounded-full border {{ $listing->is_sold ? 'bg-red-50 text-red-700 border-red-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200' }}">
+                                {{ $listing->is_sold ? 'Sold' : 'Active' }}
+                            </span>
+                        </div>
+
+                        <div class="flex flex-wrap gap-3">
+                            <form method="POST" action="{{ route('admin.listings.toggleFeatured', $listing) }}" class="inline">
+                                @csrf
+                                @method('PATCH')
+                                <button
+                                    type="submit"
+                                    class="px-5 py-3 text-sm font-semibold rounded-lg border {{ $listing->is_featured ? 'bg-gray-900 text-white border-gray-900 hover:bg-gray-800' : 'bg-amber-500 text-white border-amber-600 hover:bg-amber-600' }} transition"
+                                >
+                                    {{ $listing->is_featured ? '⭐ Remove featured' : '⭐ Mark as featured' }}
+                                </button>
+                            </form>
+
+                            <a href="{{ route('admin.listings.index') }}" class="px-5 py-3 text-sm font-semibold rounded-lg border bg-white text-gray-800 hover:bg-gray-50">
+                                Admin listings
+                            </a>
+                        </div>
+                    </div>
+                @endif
             </div>
 
             <!-- Right: Sidebar -->
@@ -124,6 +171,25 @@
                                     Message Seller
                                 </button>
                             </form>
+
+                            <!-- Favorite Button -->
+                            @php $isFav = auth()->user()->favoriteListings()->where('listing_id', $listing->id)->exists(); @endphp
+                            @if(!$isFav)
+                                <form method="POST" action="{{ route('favorites.store', $listing) }}">
+                                    @csrf
+                                    <button type="submit" class="w-full px-6 py-3 border border-gray-300 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-50 transition">
+                                        ❤️ Save to favorites
+                                    </button>
+                                </form>
+                            @else
+                                <form method="POST" action="{{ route('favorites.destroy', $listing) }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="w-full px-6 py-3 border border-gray-300 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-50 transition">
+                                        💔 Remove from favorites
+                                    </button>
+                                </form>
+                            @endif
                         @endif
                     @else
                         <a

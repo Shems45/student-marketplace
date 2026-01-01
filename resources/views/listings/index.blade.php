@@ -66,10 +66,32 @@
                             type="text"
                             name="city"
                             id="city"
+                            list="belgian-cities"
                             value="{{ $searchCity }}"
                             placeholder="e.g. Brussels"
                             class="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm placeholder-gray-500 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 transition"
                         />
+                        <datalist id="belgian-cities">
+                            <option value="Brussels" />
+                            <option value="Antwerp" />
+                            <option value="Ghent" />
+                            <option value="Leuven" />
+                            <option value="Bruges" />
+                            <option value="Mechelen" />
+                            <option value="Liege" />
+                            <option value="Namur" />
+                            <option value="Charleroi" />
+                            <option value="Hasselt" />
+                            <option value="Kortrijk" />
+                            <option value="Mons" />
+                            <option value="Aalst" />
+                            <option value="Ostend" />
+                            <option value="Genk" />
+                            <option value="Sint-Niklaas" />
+                            <option value="Roeselare" />
+                            <option value="Tournai" />
+                        </datalist>
+                        <p class="mt-1 text-xs text-gray-500">Type to see Belgian city suggestions</p>
                     </div>
 
                     <!-- Postcode -->
@@ -206,4 +228,45 @@
             </div>
         @endif
     </div>
+
+    <script>
+        (() => {
+            // Simple city -> postcode autofill for Belgian cities
+            const cityZipMap = {
+                Brussels: '1000',
+                Antwerp: '2000',
+                Ghent: '9000',
+                Leuven: '3000',
+                Bruges: '8000',
+                Mechelen: '2800',
+                Liege: '4000',
+                Namur: '5000',
+                Charleroi: '6000',
+                Hasselt: '3500',
+                Kortrijk: '8500',
+                Mons: '7000',
+                Aalst: '9300',
+                Ostend: '8400',
+                Genk: '3600',
+                'Sint-Niklaas': '9100',
+                Roeselare: '8800',
+                Tournai: '7500',
+            };
+
+            const cityInput = document.getElementById('city');
+            const zipInput = document.getElementById('postcode');
+            if (!cityInput || !zipInput) return;
+
+            const fillZip = () => {
+                const key = (cityInput.value || '').trim().toLowerCase();
+                const match = Object.keys(cityZipMap).find(c => c.toLowerCase() === key);
+                if (match) {
+                    zipInput.value = cityZipMap[match];
+                }
+            };
+
+            cityInput.addEventListener('change', fillZip);
+            cityInput.addEventListener('blur', fillZip);
+        })();
+    </script>
 </x-layouts.public>

@@ -14,5 +14,14 @@ class ContactMessage extends Model
         'email',
         'subject',
         'message',
+        'admin_reply',
+        'replied_at',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'replied_at' => 'datetime',
+        ];
+    }
 }

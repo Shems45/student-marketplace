@@ -33,13 +33,15 @@
                             <td class="px-6 py-4">
                                 <a class="text-blue-600 hover:underline" href="{{ route('admin.contact-messages.show', $m) }}">{{ $m->subject }}</a>
                             </td>
-                            <td class="px-6 py-4 flex gap-4">
-                                <a class="text-blue-600 hover:underline text-sm" href="{{ route('admin.contact-messages.show', $m) }}">Open</a>
-                                <form method="POST" action="{{ route('admin.contact-messages.destroy', $m) }}" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:underline text-sm" onclick="return confirm('Delete this message?')">Delete</button>
-                                </form>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3 text-sm">
+                                    <a class="text-blue-600 hover:underline" href="{{ route('admin.contact-messages.show', $m) }}">Open</a>
+                                    <form method="POST" action="{{ route('admin.contact-messages.destroy', $m) }}" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-600 hover:underline" onclick="return confirm('Delete this message?')">Delete</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @endforeach

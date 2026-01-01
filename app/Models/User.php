@@ -46,4 +46,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(NewsItem::class);
     }
+
+    public function favoriteListings()
+    {
+        return $this->belongsToMany(Listing::class, 'favorites')->withTimestamps();
+    }
 }

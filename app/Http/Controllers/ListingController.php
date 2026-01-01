@@ -27,6 +27,7 @@ class ListingController extends Controller
         $radiusKm = in_array((int) $radiusInput, $allowedRadii, true) ? (int) $radiusInput : null;
 
         $listingsQuery = Listing::query()
+            ->where('is_sold', false) // Hide sold listings by default
             ->with(['category', 'user', 'tags'])
             ->when($q, fn ($query) => $query->where(function ($sub) use ($q) {
                 $sub->where('title', 'like', "%{$q}%")
@@ -298,5 +299,14 @@ class ListingController extends Controller
         $listing->delete();
 
         return redirect()->route('listings.index')->with('status', 'Listing deleted.');
+    }
+
+    public function toggleSold(Listing $listing)
+    {
+        abort_unless(auth()->id() === $listing->user_id || auth()->user()->is_admin, 403);
+
+        $listing->update(['is_sold' => !$listing->is_sold]);
+
+        return back()->with('status', $listing->is_sold ? 'Marked as sold.' : 'Marked as active.');
     }
 }

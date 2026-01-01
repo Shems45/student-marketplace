@@ -15,6 +15,7 @@
             </div>
 
             <nav class="flex-1 px-3 py-4 space-y-1 text-sm">
+                <a href="{{ route('admin.listings.index') }}" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 {{ request()->routeIs('admin.listings.*') ? 'bg-gray-100 font-semibold text-gray-900' : 'text-gray-700' }}">Listings</a>
                 <a href="{{ route('admin.news.index') }}" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 {{ request()->routeIs('admin.news.*') ? 'bg-gray-100 font-semibold text-gray-900' : 'text-gray-700' }}">News</a>
                 <a href="{{ route('admin.faq-categories.index') }}" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 {{ request()->routeIs('admin.faq-categories.*') ? 'bg-gray-100 font-semibold text-gray-900' : 'text-gray-700' }}">FAQ Categories</a>
                 <a href="{{ route('admin.faq-items.index') }}" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 {{ request()->routeIs('admin.faq-items.*') ? 'bg-gray-100 font-semibold text-gray-900' : 'text-gray-700' }}">FAQ Items</a>

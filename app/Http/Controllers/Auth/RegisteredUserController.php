@@ -47,6 +47,7 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        // After registration, drop users on the homepage (requested behavior)
+        return redirect()->route('home');
     }
 }

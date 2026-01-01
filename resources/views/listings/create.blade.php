@@ -58,7 +58,38 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="space-y-2">
                     <label for="location_city" class="text-sm font-semibold text-gray-900">City <span class="text-red-500">*</span></label>
-                    <input type="text" name="location_city" id="location_city" value="{{ old('location_city') }}" placeholder="e.g. Brussels" required maxlength="80" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-gray-900 focus:ring-1 focus:ring-gray-900">
+                    <input
+                        type="text"
+                        name="location_city"
+                        id="location_city"
+                        list="belgian-cities"
+                        value="{{ old('location_city') }}"
+                        placeholder="e.g. Brussels"
+                        required
+                        maxlength="80"
+                        class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
+                    >
+                    <datalist id="belgian-cities">
+                        <option value="Brussels" />
+                        <option value="Antwerp" />
+                        <option value="Ghent" />
+                        <option value="Leuven" />
+                        <option value="Bruges" />
+                        <option value="Mechelen" />
+                        <option value="Liege" />
+                        <option value="Namur" />
+                        <option value="Charleroi" />
+                        <option value="Hasselt" />
+                        <option value="Kortrijk" />
+                        <option value="Mons" />
+                        <option value="Aalst" />
+                        <option value="Ostend" />
+                        <option value="Genk" />
+                        <option value="Sint-Niklaas" />
+                        <option value="Roeselare" />
+                        <option value="Tournai" />
+                    </datalist>
+                    <p class="text-xs text-gray-500">Type to see Belgian city suggestions; postcode auto-fills for known cities.</p>
                     @error('location_city')
                         <p class="text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -74,12 +105,21 @@
             </div>
 
             <div class="space-y-2">
-                <label for="tag_ids" class="text-sm font-semibold text-gray-900">Tags (multi-select)</label>
-                <select name="tag_ids[]" id="tag_ids" multiple size="6" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-gray-900 focus:ring-1 focus:ring-gray-900">
+                <label class="text-sm font-semibold text-gray-900">Tags</label>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     @foreach($tags as $tag)
-                        <option value="{{ $tag->id }}" @selected(in_array($tag->id, old('tag_ids', [])))>{{ $tag->name }}</option>
+                        <label class="flex items-center gap-2 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                            <input
+                                type="checkbox"
+                                name="tag_ids[]"
+                                value="{{ $tag->id }}"
+                                @checked(in_array($tag->id, old('tag_ids', [])))
+                                class="rounded border-gray-300 text-gray-900 focus:ring-gray-900"
+                            >
+                            <span class="text-sm text-gray-700">{{ $tag->name }}</span>
+                        </label>
                     @endforeach
-                </select>
+                </div>
                 @error('tag_ids')
                     <p class="text-sm text-red-600">{{ $message }}</p>
                 @enderror
@@ -92,3 +132,44 @@
         </form>
     </div>
 </x-layouts.public>
+
+        <script>
+            (() => {
+                // City -> postcode mapping for Belgian cities
+                const cityZipMap = {
+                    Brussels: '1000',
+                    Antwerp: '2000',
+                    Ghent: '9000',
+                    Leuven: '3000',
+                    Bruges: '8000',
+                    Mechelen: '2800',
+                    Liege: '4000',
+                    Namur: '5000',
+                    Charleroi: '6000',
+                    Hasselt: '3500',
+                    Kortrijk: '8500',
+                    Mons: '7000',
+                    Aalst: '9300',
+                    Ostend: '8400',
+                    Genk: '3600',
+                    'Sint-Niklaas': '9100',
+                    Roeselare: '8800',
+                    Tournai: '7500',
+                };
+
+                const cityInput = document.getElementById('location_city');
+                const zipInput = document.getElementById('location_zip');
+                if (!cityInput || !zipInput) return;
+
+                const fillZip = () => {
+                    const key = (cityInput.value || '').trim().toLowerCase();
+                    const match = Object.keys(cityZipMap).find(c => c.toLowerCase() === key);
+                    if (match) {
+                        zipInput.value = cityZipMap[match];
+                    }
+                };
+
+                cityInput.addEventListener('change', fillZip);
+                cityInput.addEventListener('blur', fillZip);
+            })();
+        </script>

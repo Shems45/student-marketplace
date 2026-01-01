@@ -76,6 +76,57 @@
             </div>
         </section>
 
+        <!-- Featured Listings -->
+        @if($featuredListings->isNotEmpty())
+            <section class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-semibold text-amber-600 uppercase tracking-wide">⭐ Uitgelicht</p>
+                        <h2 class="text-2xl font-bold text-gray-900">Featured listings</h2>
+                    </div>
+                    <a href="{{ route('listings.index') }}" class="text-sm font-semibold text-sky-700 hover:text-sky-800">Meer →</a>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    @foreach($featuredListings as $listing)
+                        <a href="{{ route('listings.show', $listing) }}" class="group relative bg-white border-2 border-amber-200 rounded-xl overflow-hidden hover:border-amber-300 hover:shadow-lg transition">
+                            <div class="absolute top-3 left-3 z-10 px-3 py-1 text-xs font-bold bg-amber-400 text-amber-900 rounded-full shadow-sm">⭐ FEATURED</div>
+                            <div class="relative h-40 bg-gray-100 overflow-hidden">
+                                @if($listing->image_path)
+                                    <img src="{{ asset('storage/' . $listing->image_path) }}" alt="{{ $listing->title }}" class="h-full w-full object-cover group-hover:scale-105 transition duration-300" />
+                                @else
+                                    <div class="h-full w-full flex items-center justify-center text-gray-300 text-4xl">📦</div>
+                                @endif
+                            </div>
+                            <div class="p-4 space-y-2">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="text-xs font-semibold text-gray-700 bg-gray-100 px-2 py-1 rounded">{{ $listing->category->name ?? 'Categorie' }}</span>
+                                    <span class="text-xs text-gray-500">{{ $listing->created_at->diffForHumans() }}</span>
+                                </div>
+                                <h3 class="text-base font-semibold text-gray-900 line-clamp-2 group-hover:text-gray-700">{{ $listing->title }}</h3>
+                                <p class="text-sm text-gray-600">{{ $listing->user->username }}</p>
+                                @if($listing->location_city || $listing->location_zip)
+                                    <p class="text-xs text-gray-500">📍 {{ trim(($listing->location_zip ?? '') . ' ' . ($listing->location_city ?? '')) }}</p>
+                                @endif
+                                <div class="pt-3 flex items-center justify-between border-t border-gray-100">
+                                    <span class="text-xl font-bold text-sky-700">
+                                        @if(!is_null($listing->price_cents))
+                                            €{{ number_format($listing->price_cents / 100, 2) }}
+                                        @else
+                                            <span class="text-sm text-gray-500">Op aanvraag</span>
+                                        @endif
+                                    </span>
+                                    @if($listing->tags->isNotEmpty())
+                                        <span class="text-xs text-gray-600 bg-gray-50 border border-gray-100 px-2 py-1 rounded">{{ $listing->tags->first()->name }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+            </section>
+        @endif
+
         <!-- Latest Listings -->
         <section class="space-y-4">
             <div class="flex items-center justify-between">
