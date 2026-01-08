@@ -21,11 +21,27 @@
                     <td class="p-3 flex gap-2">
                         <a class="underline" href="{{ route('news.show', $item) }}" target="_blank">View</a>
                         <a class="underline" href="{{ route('admin.news.edit', $item) }}">Edit</a>
-                        <form method="POST" action="{{ route('admin.news.destroy', $item) }}">
-                            @csrf
-                            @method('DELETE')
-                            <button class="underline text-red-600" onclick="return confirm('Delete this item?')">Delete</button>
-                        </form>
+                        <x-confirm-modal 
+                            title="Delete News Item"
+                            message="Are you sure you want to delete this news item? This action cannot be undone."
+                            confirm-text="Delete"
+                            cancel-text="Cancel"
+                        >
+                            <x-slot name="trigger">
+                                <button type="button" class="underline text-red-600">
+                                    Delete
+                                </button>
+                            </x-slot>
+                            <x-slot name="action">
+                                <form method="POST" action="{{ route('admin.news.destroy', $item) }}" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:w-auto">
+                                        Delete
+                                    </button>
+                                </form>
+                            </x-slot>
+                        </x-confirm-modal>
                     </td>
                 </tr>
             @endforeach

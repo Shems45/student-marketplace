@@ -37,6 +37,7 @@ class UserAdminController extends Controller
         ]);
 
         User::create([
+            'name' => $data['username'], // Laravel expects 'name' field
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
@@ -63,7 +64,20 @@ class UserAdminController extends Controller
 
     public function destroy(User $user)
     {
-        //
+        // Prevent deleting yourself
+        if ($user->id === auth()->id()) {
+            return back()->with('error', 'You cannot delete your own account.');
+        }
+
+        // Prevent deleting the last admin
+        if ($user->is_admin && User::where('is_admin', true)->count() <= 1) {
+            return back()->with('error', 'Cannot delete the last admin user.');
+        }
+
+        $username = $user->username;
+        $user->delete();
+
+        return redirect()->route('admin.users.index')->with('status', "User '{$username}' has been deleted.");
     }
 
     public function toggleAdmin(User $user)

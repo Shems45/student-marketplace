@@ -109,16 +109,27 @@
                                 @endif
                             </form>
 
-                            <form method="POST" action="{{ route('listings.destroy', $listing) }}" onsubmit="return confirm('Delete this listing permanently?');">
-                                @csrf
-                                @method('DELETE')
-                                <button
-                                    type="submit"
-                                    class="px-6 py-3 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-700 transition"
-                                >
-                                    Delete
-                                </button>
-                            </form>
+                            <x-confirm-modal 
+                                title="Delete Listing"
+                                message="Are you sure you want to delete this listing permanently? This action cannot be undone."
+                                confirm-text="Delete"
+                                cancel-text="Cancel"
+                            >
+                                <x-slot name="trigger">
+                                    <button type="button" class="px-6 py-3 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-700 transition">
+                                        Delete
+                                    </button>
+                                </x-slot>
+                                <x-slot name="action">
+                                    <form method="POST" action="{{ route('listings.destroy', $listing) }}" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:w-auto">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </x-slot>
+                            </x-confirm-modal>
                         </div>
                     </div>
                 @endif
@@ -252,7 +263,7 @@
                             </form>
 
                             <!-- Favorite Button -->
-                            @php $isFav = auth()->user()->favoriteListings()->where('listing_id', $listing->id)->exists(); @endphp
+                            @php $isFav = auth()->check() && auth()->user()->favoriteListings()->where('listing_id', $listing->id)->exists(); @endphp
                             @if(!$isFav)
                                 <form method="POST" action="{{ route('favorites.store', $listing) }}">
                                     @csrf
@@ -266,7 +277,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="w-full px-6 py-3 border border-gray-300 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-50 transition flex items-center justify-center gap-2">
-                                        <x-heroicon-o-heart-solid class="w-5 h-5 text-red-500" />
+                                        <x-heroicon-s-heart class="w-5 h-5 text-red-500" />
                                         Remove from favorites
                                     </button>
                                 </form>

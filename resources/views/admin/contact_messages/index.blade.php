@@ -40,13 +40,27 @@
                                 <div class="flex items-center gap-3 text-sm">
                                     <a class="text-blue-600 hover:underline"
                                         href="{{ route('admin.contact-messages.show', $m) }}">Open</a>
-                                    <form method="POST" action="{{ route('admin.contact-messages.destroy', $m) }}"
-                                        class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:underline"
-                                            onclick="return confirm('Delete this message?')">Delete</button>
-                                    </form>
+                                    <x-confirm-modal 
+                                        title="Delete Message"
+                                        message="Are you sure you want to delete this message? This action cannot be undone."
+                                        confirm-text="Delete"
+                                        cancel-text="Cancel"
+                                    >
+                                        <x-slot name="trigger">
+                                            <button type="button" class="text-red-600 hover:underline">
+                                                Delete
+                                            </button>
+                                        </x-slot>
+                                        <x-slot name="action">
+                                            <form method="POST" action="{{ route('admin.contact-messages.destroy', $m) }}" class="inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:w-auto">
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </x-slot>
+                                    </x-confirm-modal>
                                 </div>
                             </td>
                         </tr>
