@@ -83,19 +83,6 @@
             </div>
         </div>
 
-        <!-- Favorites -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-medium text-gray-600">Favorites</p>
-                    <p class="text-3xl font-bold text-pink-600 mt-2">{{ $stats['favorites_total'] ?? 0 }}</p>
-                </div>
-                <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
-                    <x-heroicon-o-heart class="w-6 h-6 text-pink-600" />
-                </div>
-            </div>
-        </div>
-
         <!-- Contact Messages -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div class="flex items-center justify-between">
@@ -106,33 +93,6 @@
                 </div>
                 <div class="w-12 h-12 bg-sky-100 rounded-lg flex items-center justify-center">
                     <x-heroicon-o-envelope class="w-6 h-6 text-sky-600" />
-                </div>
-            </div>
-        </div>
-
-        <!-- Conversations -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-medium text-gray-600">Conversations</p>
-                    <p class="text-3xl font-bold text-indigo-600 mt-2">{{ $stats['conversations_total'] ?? 0 }}</p>
-                </div>
-                <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
-                    <x-heroicon-o-chat-bubble-left-right class="w-6 h-6 text-indigo-600" />
-                </div>
-            </div>
-        </div>
-
-        <!-- Messages -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-medium text-gray-600">Messages</p>
-                    <p class="text-3xl font-bold text-violet-600 mt-2">{{ $stats['messages_total'] ?? 0 }}</p>
-                    <p class="text-xs text-orange-600 mt-2 font-medium">Unread: {{ $stats['messages_unread'] ?? 0 }}</p>
-                </div>
-                <div class="w-12 h-12 bg-violet-100 rounded-lg flex items-center justify-center">
-                    <x-heroicon-o-paper-airplane class="w-6 h-6 text-violet-600" />
                 </div>
             </div>
         </div>

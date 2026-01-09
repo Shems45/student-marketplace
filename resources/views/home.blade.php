@@ -93,6 +93,12 @@
                                         <x-heroicon-o-cube class="w-12 h-12 text-gray-300" />
                                     </div>
                                 @endif
+
+                                @if($listing->is_sold)
+                                    <span class="absolute top-3 right-3 px-3 py-1 text-xs font-semibold bg-red-500 text-white rounded-full">SOLD</span>
+                                @elseif($listing->is_reserved)
+                                    <span class="absolute top-3 right-3 px-3 py-1 text-xs font-semibold bg-orange-500 text-white rounded-full">RESERVED</span>
+                                @endif
                             </div>
                             <div class="p-4 space-y-2">
                                 <div class="flex items-center justify-between gap-2">
