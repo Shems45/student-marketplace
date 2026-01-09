@@ -39,7 +39,7 @@ Before you start, make sure you have:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/student-marketplace.git
+git clone https://github.com/Shems45/student-marketplace.git
 cd student-marketplace
 ```
 
