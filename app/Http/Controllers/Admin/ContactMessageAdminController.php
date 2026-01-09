@@ -50,7 +50,8 @@ class ContactMessageAdminController extends Controller
         ]);
 
         Mail::raw($data['admin_reply'], function ($m) use ($contactMessage) {
-            $m->to($contactMessage->email)
+            $m->from(config('mail.from.address'), config('mail.from.name'))
+              ->to($contactMessage->email)
               ->subject('Re: Your message to Student Marketplace');
         });
 

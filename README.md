@@ -74,15 +74,15 @@ APP_URL=http://localhost:8000
 # Database - SQLite is already configured by default
 DB_CONNECTION=sqlite
 
-# Mail - For contact form emails (optional for local development)
-# You can use Gmail with an app password:
+# Mail - For contact form emails
+# Using public Gmail account for development/testing:
 MAIL_MAILER=smtp
 MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
-MAIL_USERNAME=your-email@gmail.com
-MAIL_PASSWORD=your-app-password
+MAIL_USERNAME=u3503098154@gmail.com
+MAIL_PASSWORD=fhkz ymop ozuo dgfa
 MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=your-email@gmail.com
+MAIL_FROM_ADDRESS=u3503098154@gmail.com
 MAIL_FROM_NAME="${APP_NAME}"
 ```
 
